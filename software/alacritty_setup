@@ -2,6 +2,8 @@ apt-get install cmake pkg-config libfreetype6-dev libfontconfig1-dev libxcb-xfix
 git clone https://github.com/alacritty/alacritty.git
 cd alacritty
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-source $HOME/.cargo/ev
+source $HOME/.cargo/env
 cargo build --release
 
+#rustup override set st=
+#rustup update stable
