@@ -1,2 +1,11 @@
-sudo apt-get update && sudo apt-get upgrade -y
+apt-get update && sudo apt-get upgrade -y
+apt-get install sudo 
 sudo apt-get install git curl wget zip 
+sudo apt-get remove libreoffice* -y
+sudo apt-get autoremove -y
+cp ~/.bashrc ~
+cp ~/.bash_aliases ~
+
+
+
+

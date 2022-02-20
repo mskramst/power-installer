@@ -7,3 +7,6 @@ cargo build --release
 
 #rustup override set st=
 #rustup update stable
+
+cp ../config/alacritty.yml ~/.config/alacritty
+
