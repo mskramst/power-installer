@@ -3,9 +3,8 @@ apt-get install sudo
 sudo apt-get install git curl wget zip 
 sudo apt-get remove libreoffice* -y
 sudo apt-get autoremove -y
-cp ~/.bashrc ~
-cp ~/.bash_aliases ~
-
+cp config/.bashrc ~
+cp config/.bash_aliases ~
 
 
 
