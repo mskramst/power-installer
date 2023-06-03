@@ -9,6 +9,7 @@ function display_menu() {
     echo "4. NeoVim"
     echo "5. VS Code"
     echo "6. Chrome"
+    echo "7. Download cool background images"
     echo "0. Exit"
     echo
     echo -n "Please enter your choice: "
@@ -19,27 +20,31 @@ function handle_choice() {
     case $1 in
         1)
             echo "Installing Git"
-            git_install
+            ./git_install
             ;;
         2)
             echo "Installing Alacritty"
-            alacritty_install
+            ./alacritty_install
             ;;
         3)
             echo "Installing Vim"
-            vim_install
+            ./vim_install
             ;;
         4)
             echo "Installing Neovim"
-            neovim_install
+            ./full_nvim_install
             ;;
         5)
             echo "Installing VS Code"
-            vscode_install
+            ./vscode_install
             ;;
         6)
             echo "Installing Chrome"
-            chrome_install
+            ./chrome_install
+            ;;
+        6)
+            echo "Installing Wallpapers"
+            ./get_wallpapers
             ;;
         0)
             echo "Exiting"
