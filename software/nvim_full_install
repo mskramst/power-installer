@@ -5,3 +5,5 @@ cd neovim
 sudo make CMAKE_BUILD_TYPE=Release install
 cd ..
 sudo rm -rf neovim
+mkdir -p ~/.config
+cp ../config/nvim -R ~/.config
