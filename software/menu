@@ -32,7 +32,7 @@ function handle_choice() {
             ;;
         4)
             echo "Installing Neovim"
-            ./full_nvim_install
+            ./nvim_full_install
             ;;
         5)
             echo "Installing VS Code"
