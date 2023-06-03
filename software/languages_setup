@@ -1,3 +1,8 @@
+#Node
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+#Java
 curl -s "https://get.sdkman.io" | bash
-
+#PHP
+sudo apt-get update && sudo apt-get install php7
+wget https://raw.githubusercontent.com/composer/getcomposer.org/76a7060ccb93902cd7576b67264ad91c8a2700e2/web/installer -O - -q | php -- --quiet
+sudo mv composer.phar /usr/local/bin
