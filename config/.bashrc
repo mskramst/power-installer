@@ -64,19 +64,6 @@ HISTSIZE=2000
 HISTFILESIZE=2000
 shopt -s checkwinsize
 
-# ------------------------------- path -------------------------------
-
-#mkdir -p "$SCRIPTS" &>/dev/null
-
-# go up x number of dirs
-goup() {
-  num=$1
-  while [ $num -ne 0  ];do
-    cd ..
-    num=$( expr $num - 1   )
-  done
-}
-
 # ------------------------------- pager ------------------------------
 
 if test -x /usr/bin/lesspipe; then

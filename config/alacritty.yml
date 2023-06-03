@@ -50,7 +50,7 @@ colors:
     white: "#fdfdfd"
 
 font:
-  size: 14.0
+  size: 12.0
   normal:
     family: Inconsolata
 
