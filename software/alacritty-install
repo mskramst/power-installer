@@ -1,3 +1,18 @@
+sudo apt-get install cmake pkg-config libfreetype6-dev libfontconfig1-dev -y
+libxcb-xfixes0-dev python3 curl -y
+git clone https://github.com/alacritty/alacritty.git
+cd alacritty
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+source $HOME/.cargo/env
+cargo build --release
+
+#rustup override set st=
+#rustup update stable
+
+mkdir ~/.config/alacritty
+cd ..
+cp ../config/alacritty.yml ~/.config/alacritty
+
 # must run script level above target directory
 
 # set up desktop entry
@@ -15,6 +30,3 @@ sudo update-desktop-database
 # install man pages
 sudo mkdir -p /usr/local/share/man/man1
 
-sudo mkdir -p ~/.config/alacritty
-
-cp ../config/alacritty.yml ~/.config/alacritty

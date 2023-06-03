@@ -1,4 +1,4 @@
-#Installs old version
+#Installs old stable version 0.4
 #sudo add-apt-repository ppa:neovim-ppa/unstable
 #sudo apt-get update
 #isudo apt-get install neovim
