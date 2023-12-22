@@ -2,8 +2,10 @@
 
 git clone https://github.com/mskramst/mydotfiles
 cd mydotfiles || exit
-cp .bash_git .bashrc_ext .tmux_conf ~
-cp .vim ~
+cp .bash_git ~
+cp .bashrc_ext ~
+cp .tmux_conf ~
+cp -r .vim ~
 cd .config || exit
 sudo mv kitty alacritty lynx ~/.config
 
