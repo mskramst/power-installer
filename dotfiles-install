@@ -7,7 +7,7 @@ sudo echo "if [ -f ~/.bashrc_ext ]; then . ~/.bashrc_ext; fi" \
 cd mydotfiles || exit
 cp .bash_git ~
 cp .bashrc_ext ~
-cp .tmux_conf ~
+cp .tmux.conf ~
 cp -r .vim ~
 cd .config || exit
 sudo mv kitty alacritty lynx ~/.config
