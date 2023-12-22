@@ -1,6 +1,9 @@
 #!/bin/bash	
 
 git clone https://github.com/mskramst/mydotfiles
+#add import to top of .bashrc by concatenating it with file and copying over
+sudo echo "if [ -f ~/.bashrc_ext ]; then . ~/.bashrc_ext fi" \
+	| cat - .bashrc > temp && mv temp .bashrc
 cd mydotfiles || exit
 cp .bash_git ~
 cp .bashrc_ext ~
@@ -8,6 +11,3 @@ cp .tmux_conf ~
 cp -r .vim ~
 cd .config || exit
 sudo mv kitty alacritty lynx ~/.config
-#add import to top of .bashrc by concatenating it with file and copying over
-echo "if [ -f ~/.bashrc_ext ]; then . ~/.bashrc_ext fi" \
-	| cat - .bashrc > temp && mv temp .bashrc
