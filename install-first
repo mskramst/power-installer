@@ -1,6 +1,6 @@
 apt-get update && sudo apt-get upgrade -y
 apt-get install sudo -y
-sudo apt-get install git curl wget zip tmux -y
+sudo apt-get install git curl wget zip tmux podman -y
 sudo apt-get remove libreoffice* -y
 sudo apt-get autoremove -y
 sudo apt-get install fonts-inconsolata -y
