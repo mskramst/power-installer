@@ -1,5 +1,6 @@
 #!/bin/bash	
 
+cd .. || exit
 git clone https://github.com/mskramst/dev.git
 cd dev || exit
 echo "Ready to code in the best languages!"
