@@ -11,5 +11,6 @@ cp .tmux.conf ~
 cp -r .vim ~
 cd .config || exit
 sudo mv kitty alacritty lynx ~/.config
-sudo mkdir -p repos/github.com/"${USER:-$(whoami)}"
+sudo mkdir -p repos/github.com/mskramst
+
 
