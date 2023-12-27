@@ -2,5 +2,7 @@
 
 echo ".cfg" >> .gitignore
 git clone --bare https://github.com/mskramst/mydotfiles $HOME/.cfg
-git checkout --git-dir=$HOME/.cfg/ --work-tree=$HOME
+git --git-dir=$HOME/.cfg/ --work-tree=$HOME checkout
 git config --local status.showUntrackedFiles no
+sudo echo "if [ -f ~/.bashrc_ext ]; then . ~/.bashrc_ext; fi" \
+	| cat - ~/.bashrc > temp && mv temp ~/.bashrc
