@@ -1,0 +1,12 @@
+sudo apt-get update && sudo apt-get upgrade -y
+sudo apt-get install sudo -y
+sudo apt-get install git curl wget zip tmux kitty -y
+sudo apt-get remove libreoffice* -y
+sudo apt-get autoremove -y
+
+#Set wallpaper to Bing Search
+wget -O /tmp/wallpaper.jpg "http://www.bing.com/$(wget -q -O- https://binged.it/2ZButYc | sed -e 's/<[^>]*>//g' | cut -d / -f2 | cut -d \& -f1)"
+gsettings set org.gnome.desktop.background picture-uri file:////tmp/wallpaper.jpg
+
+#Set to own picture
+#gsettings set org.gnome.desktop.background picture-uri file:////usr/share/backgrounds/ubuntu-default-greyscale-wallpaper.png
