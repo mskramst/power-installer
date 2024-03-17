@@ -1,0 +1,9 @@
+git clone https://github.com/i3/i3.git
+cd i3
+make
+sudo make install
+sudo apt install dwm
+
+
+#sudo apt-get install lightdm
+#sudo apt-get install i3 i3lock dunst rofi
