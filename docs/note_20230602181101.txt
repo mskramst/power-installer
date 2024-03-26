@@ -1,1 +1,0 @@
-To give a user admin rights, edit /etc/sudoers with sudo vim /etc/sudoers and duplicate root and change root to new user
