@@ -1,0 +1,240 @@
+
+" A customized .vimrc for vim (https://www.vim.org/)
+
+"----------------------- General settings ---------------------------------
+
+syntax on
+filetype on                       "required
+filetype indent on
+set nocompatible                  "be iMproved, required
+set showmatch                     "Convenient for showing the matching braces"
+set hidden                        "Allows for file buffers
+set wildmenu                      "Creates a wild menu for toggling between files
+set colorcolumn=80                "Create a clear 80 char limit for coding"
+set autoindent
+set nonu                            "Hide/Display line numbers"
+set clipboard=unnamed
+"set norelativenumber              "Hide/Show line numbers and relative value
+                                  "  for easy navigation"
+set smartcase                     "Helps with searching text set noswapfile
+set history=10000                 "Creates a history of vim commands to search
+set undodir=~/.vim/undodir        "Stores undohistory in undodirectory for
+                                  "  edited files for future sessions"
+set undofile                      "Turns on saving of undo/redo history"
+set viminfo='20,<1000,s1000       "Prevents truncating yanks, deletes
+set noerrorbells                  "Turn off sound when errors made"
+set belloff=all
+set textwidth=80                  "Set default settings for tabs, width, indent"
+set tabstop=2                     "All tabbing set to 2
+set softtabstop=2
+set shiftwidth=2
+"set showtabline=2
+"set expandtab
+set ruler
+set wrapscan
+set path=$PWD/**                  "Enable fuzzy finding in the vim command line
+set noswapfile
+set nowritebackup
+set ttyfast
+set mouse=a                       "Allows for mouse scrolling
+set re=0                          "Fixes slow TS highlighting
+
+"Ignore looking in these locations for fuzzy finder
+
+set wildignore+=**/.git/**,**/__pycache__/**,**/venv/**,**/
+      \node_modules/**,**/dist/**,**/build/**,*.o,*.pyc,*.swp
+
+"{{ External Files }}
+
+source ~/.vim/vimabbrs.vim       "Abbreviations loaded from external file
+"source ~/.vim/vlang.vim         "Language specific functions
+
+"------------------------- Plug-in configurations --------------------------
+
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+"{{Plugins installed into Plugged folder}}
+
+call plug#begin('~/.vim/plugged')
+
+"{{The Basics}}
+
+"Plug 'plasticboy/vim-markdown'
+"Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
+Plug 'dense-analysis/ale'
+
+"{{Productivity}}
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+"Plug 'mattn/emmet-vim'
+
+"Git functionality in VIM"
+"Plug 'tpope/vim-fugitive'
+
+"{{Syntax Highlighting and Colors}}
+Plug 'morhetz/gruvbox'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+
+"Plug 'jiangmiao/auto-pairs'
+"Plug 'vim-pandoc/vim-pandoc'
+"Plug 'vim-pandoc/vim-pandoc-syntax'
+
+"Allows to change surround values (i.e. cs"')
+"Plug 'tpope/vim-surround'
+
+"{{Language specific plugins
+"Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+"Plug 'StanAngeloff/php.vim'
+"Plug 'arnaud-lb/vim-php-namespace'
+
+Plug 'sheerun/vim-polyglot'
+
+"Typescript
+Plug 'HerringtonDarkholme/yats.vim'
+
+call plug#end()
+
+
+if has('termguicolors')
+  set termguicolors
+endif
+
+"{{Theming}}
+
+colorscheme gruvbox
+let g:gruvbox_contrast_dark = 'dark'
+let g:airline_theme = 'gruvbox'
+let g:lightline = { 'colorscheme': 'gruvbox' }
+"let g:airline#extensions#tabline#enabled = 1
+
+"{{For dark version}}
+
+set background=dark
+set term=xterm
+
+let mapleader = " "
+:imap ii <Esc>
+
+"{{ Fuzzy finder }}
+
+let g:fzf_layout = { 'window': { 'width': 0.5, 'height': 0.3 } }
+let g:fzf_action = { 'enter': 'tab split' }
+let $FZF_DEFAULT_OPTS='--reverse'
+
+"{{ File type specific config (i.e. markdown, yaml }}
+nnoremap <leader>md :MarkdownPreview<CR>
+autocmd Filetype markdown let b:autopairs_enabled = 0
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+autocmd FileType json syntax match Comment +\/\/.\+$+
+autocmd FileType json syntax match Comment "//.*"
+au FileType markdown setlocal foldlevel=99
+
+let g:vim_markdown_folding_disabled = 1
+let g:markdown_fenced_languages = ['html', 'python', 'bash=sh']
+let g:mkdp_markdown_css = '~/.vim/github-markdown.css'
+
+let g:go_fmt_command = "gofmt"
+"let g:pandoc#modules#enabled = []
+"
+let g:ale_sign_error = '@'
+let g:ale_sign_warning = '*'
+"let g:ale_set_signs = 0
+"let b:ale_linters = ['eslint']
+
+"Remove node_modules from fzf (not in git repo like below)
+let $FZF_DEFAULT_COMMAND='find . \( -name node_modules -o -name .git \) -prune -o -print'
+
+" File specific / skeleton files when a new file with name created. 
+" (i.e. ~/.skele)
+
+au BufNewFile readme.md 0r $STARTANEW/snippets/skele/readme.md
+au BufNewFile Main.java 0r $STARTANEW/snippets/skele/Main.java
+
+au BufRead,BufNewFile *.md setlocal textwidth=80
+" (broken) autocmd BufNewFile,BufRead * if expand('%:t') !~ '\.' | set syntax=sh | endif
+"
+
+"{{Personal Quick Actions}}
+nnoremap <leader>so :so %<CR>
+nnoremap <leader>vim :e ~/.vim/vimrc<CR>
+nnoremap <leader>not :e $STARTANEW/software/vim.md<CR>
+nnoremap <leader>bp :bp<CR>
+nnoremap <leader>bn :bn<CR>
+nnoremap <leader>tit :.!htitle<CR>
+nnoremap <leader>gf :GFiles<CR>
+nnoremap <leader>gg :Files<CR>
+nnoremap <leader>sn :-1read $STARTANEW/snippets/
+nnoremap <leader>gp :.!gp<CR>
+nnoremap <leader>mm :.!mdurl
+nnoremap <leader>o :on
+nnoremap <leader>tt :bo term<CR>
+nnoremap <Leader>b :ls<CR>:b<Space>
+nnoremap <Leader>buf :.!yyy<CR>
+nnoremap <Leader>gbuf :r $STARTANEW/saved/buf<CR>
+nnoremap q: <nop>
+
+"{{Git melated commands}}
+nmap <leader>gs :G<CR>
+nmap <leader>gc :GCheckout<CR>
+nmap <leader>gu :diffget //2<CR>
+nmap <leader>gh :diffget //3<CR>
+map <leader>code i```<CR><CR>```
+
+"{{Split Navigation}}
+map <C-h> <C-w>h
+map <C-j> <C-w>j
+map <C-k> <C-w>k
+map <C-l> <C-w>l
+
+"can view syntax highlighting for particular element by pressing F2
+"function def below
+nmap <F2> :call <SID>SynStack()<CR>
+
+"{{ Vim Terminal colors }}
+
+let g:terminal_ansi_colors = [
+  \'#282828', '#CC241D', '#98971A', '#D79921',
+  \'#458588', '#B16286', '#689D6A', '#D65D0E',
+  \'#fb4934', '#b8bb26', '#fabd2f', '#83a598',
+  \'#d3869b', '#8ec07c', '#fe8019', '#FBF1C7' ]
+
+highlight Terminal guibg='#282828' guifg='#ebdbb2'
+
+"{{ Markdown spacing at end of line }}
+"Syntax highlight is located in .vim/after/syntax/vim.vim
+
+map ,e $A  <ESC>
+
+" Highlight the active tab.
+"Disable search highlighting with <C-L> when refreshing screen
+
+nnoremap <C-L> :nohl<CR><C-L>
+
+"Disable caps lock after leaving insert mode }}
+
+au InsertLeave * call TurnOffCaps()
+
+function TurnOffCaps()
+    let capsState = matchstr(system('xset -q'),
+      \'00: Caps Lock:\s\+\zs\(on\|off\)\ze')
+    if capsState == 'on'
+        silent! execute ':!xdotool key Caps_Lock'
+    endif
+endfunction
+
+" Displays all the syntax rules for current position, useful
+" When writing Vimscript syntax plugins
+if has("syntax")
+function! <SID>SynStack()
+  if !exists("*synstack")
+    return
+  endif
+    echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc
+endif
+
