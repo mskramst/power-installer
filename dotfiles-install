@@ -1,10 +1,7 @@
 #!/bin/bash	
-git clone https://github.com/mskramst/mydotfiles
+git clone https://github.com/mskramst/dotfiles
 rm ~/.bashrc
-cp software/bashrc ~/.bashrc
-cd mydotfiles || exit
-cp .bash_git .bashrc_ext .bash_aliases .bash_user ~
-sudo mv --backup=simple .config ~
-#sudo mv kitty alacritty lynx vim tmux ~/.config
+cp .bash_git .bashrc .bash_aliases ~
+cp .vim ~
 
 
