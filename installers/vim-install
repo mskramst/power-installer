@@ -1,0 +1,9 @@
+git clone https://github.com/vim/vim.git
+cd vim 
+make distclean
+sudo apt-get install libncurses5-dev libncursesw5-dev -y
+make
+sudo make install
+
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim

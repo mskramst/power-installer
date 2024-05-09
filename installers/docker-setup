@@ -1,0 +1,2 @@
+docker build -t go-sandbox .
+docker run --name go-proj -it -v $(pwd):/code go-sandbox bash
