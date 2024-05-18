@@ -1,3 +1,0 @@
-git clone https://github.com/mskramst/mydotfiles
-mv mydotfiles/.vim ~
-cp vimrc ~/.vim
