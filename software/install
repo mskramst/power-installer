@@ -1,0 +1,192 @@
+#!/bin/bash
+
+# function for program 1
+install_firefox() {
+    echo "Installing firefox..."
+    type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y)
+    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+    && sudo apt update \
+    && sudo apt install gh -y
+}
+
+install_chrome() {
+    echo "Installing chrome..."
+    sudo mkdir -p /etc/apt/keyrings
+    curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
+    echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list
+    sudo apt update && sudo apt install mods
+    echo " Go to https://platform.openai.com/account/api-keys and export OPENAI_AI_KEY in .bashrc"
+}
+
+install_nvim() {
+    echo "Installing neovim..."
+    #Installs old stable version 0.4
+    #sudo add-apt-repository ppa:neovim-ppa/unstable
+    #sudo apt-get update
+    #isudo apt-get install neovim
+
+    sudo apt-get install ninja-build gettext libtool libtool-bin autoconf automake
+    cmake g++ pkg-config unzip curl doxygen -y
+    git clone https://github.com/neovim/neovim.git
+    cd neovim
+    make CMAKE_BUILD_TYPE=RelWithDebInfo
+    sudo make install
+}
+
+install_gh() {
+    echo "Installing gh..."
+    type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y)
+    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+    && sudo apt update \
+    && sudo apt install gh -y
+}
+
+install_mods() {
+    echo "Installing mods..."
+    sudo mkdir -p /etc/apt/keyrings
+    curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
+    echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list
+    sudo apt update && sudo apt install mods
+    echo " Go to https://platform.openai.com/account/api-keys and export OPENAI_AI_KEY in .bashrc"
+}
+
+install_sdkman() {
+    echo "Installing sdkman..."
+    echo "Installing sdkman..."
+    sudo apt-get install zip -y
+    curl -s "https://get.sdkman.io" | bash
+    source "$HOME/.sdkman/bin/sdkman-init.sh"
+}
+
+install_pnpm() {
+    echo "Installing pnpm..."
+    curl -fsSL https://get.pnpm.io/install.sh | sh -
+}
+
+install_vim() {
+    echo "Installing vim..."
+    git clone https://github.com/vim/vim.git
+    cd vim 
+    make distclean
+    sudo apt-get install libncurses5-dev libncursesw5-dev -y
+    make
+    sudo make install
+
+    curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+}
+
+install_docker() {
+    sudo update && sudo apt-get install \
+        apt-transport-https \
+        ca-certificates \
+        curl \
+        gnupg \
+        lsb-release
+
+    #Add docker key
+     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+    echo \
+      "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
+      $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+    sudo apt-get update  &&
+    sudo apt-get install docker-ce docker-ce-cli containerd.io
+    sudo usermod -aG docker $USER
+    sudo chmod 666 /var/run/docker.sock
+}
+
+install_vscode() {
+    sudo apt update 
+    sudo apt install gnupg2 software-properties-common apt-transport-https curl -y
+    curl -sSL https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+    sudo add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
+    sudo apt update 
+    sudo apt install code -y
+    cp ../config/.vscode -R ~
+     
+}
+
+install_alacritty() {
+    echo "Installing alacritty.."
+
+    sudo apt-get install cmake pkg-config libfreetype6-dev libfontconfig1-dev -y
+    libxcb-xfixes0-dev python3 curl -y
+    git clone https://github.com/alacritty/alacritty.git
+    cd alacritty
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+    source $HOME/.cargo/env
+    cargo build --release
+
+    #rustup override set st=
+    #rustup update stable
+
+    mkdir ~/.config/alacritty
+    cd ..
+    cp ../config/alacritty.yml ~/.config/alacritty
+
+    # must run script level above target directory
+
+    # set up desktop entry
+    sudo cp alacritty/target/release/alacritty /usr/local/bin
+
+    # adding logo
+    sudo cp alacritty/extra/logo/alacritty-term.svg /usr/share/pixmaps/Alacritty.svg
+
+    # setup desktop entry
+    sudo desktop-file-install alacritty/extra/linux/Alacritty.desktop
+
+    # update desktop database
+    sudo update-desktop-database
+
+    # install man pages
+    sudo mkdir -p /usr/local/share/man/man1
+
+}
+
+# function to display menus
+show_menu() {
+    clear
+    echo "------------------------"
+    echo " M A I N - M E N U"
+    echo "------------------------"
+    
+    programs=("firefox" "chrome" "vim" "nvim" "docker" "alacritty" "vscode"
+        "nvm" "gh" "sdkman")
+
+    for ((i=0; i<${#programs[@]}; i++))
+    do
+        echo "$i: ${programs[i]}"
+    done
+    echo "0. Exit"
+
+    local choice
+    read -p "Enter choice [ 1 - 4] " choice
+    case $choice in
+        1) install_firefox ;;
+        2) install_chrome ;;
+        3) install_vim ;;
+        4) install_nvim ;;
+        5) install_docker ;;
+        6) install_alacritty ;;
+        7) install_vscode ;;
+        8) install_nvm ;;
+        9) install_gh ;;
+        10) install_sdkman ;;
+        0) exit 0;;
+        *) echo -e "${RED}Error...${STD}" && sleep 2
+    esac
+}
+
+
+# function to read input from the user and start the selected program installation
+# main loop
+while true
+do
+    show_menu
+done

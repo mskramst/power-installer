@@ -1,0 +1,91 @@
+#!/bin/bash
+
+# function for program 1
+install_gh() {
+    echo "Installing gh..."
+    type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y)
+    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+    && sudo apt update \
+    && sudo apt install gh -y
+}
+
+install_mods() {
+    echo "Installing mods..."
+    sudo mkdir -p /etc/apt/keyrings
+    curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
+    echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list
+    sudo apt update && sudo apt install mods
+    echo " Go to https://platform.openai.com/account/api-keys and export OPENAI_AI_KEY in .bashrc"
+}
+
+install_sdkman() {
+    echo "Installing sdkman..."
+    echo "Installing sdkman..."
+    sudo apt-get install zip -y
+    curl -s "https://get.sdkman.io" | bash
+    source "$HOME/.sdkman/bin/sdkman-init.sh"
+}
+
+install_pnpm() {
+    echo "Installing pnpm..."
+    curl -fsSL https://get.pnpm.io/install.sh | sh -
+}
+
+install_vim() {
+    echo "Installing vim..."
+    git clone https://github.com/vim/vim.git
+    cd vim 
+    make distclean
+    sudo apt-get install libncurses5-dev libncursesw5-dev -y
+    make
+    sudo make install
+
+    curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+}
+
+install_go() {
+    echo "Installing go..."
+    wget https://go.dev/dl/go1.20.1.linux-amd64.tar.gz
+    sudo tar -C /usr/local -xvf go1.12.6.linux-amd64.tar.gz
+    echo "export PATH=$PATH:/usr/local/go/bin" >> ~/.bashrc
+}
+
+# function to display menus
+show_menu() {
+    programs=("gh" "mods" "pnpm" "vim" "go" "sdkman")
+
+    clear
+    echo "------------------------"
+    echo " M A I N - M E N U"
+    echo "------------------------"
+    
+    for ((i=0; i<${#programs[@]}; i++))
+    do
+        echo "$i: ${programs[i]}"
+    done
+    echo "0. Exit"
+
+    local choice
+    read -p "Enter choice [ 1 - 4] " choice
+    case $choice in
+        1) install_gh ;;
+        2) install_mods ;;
+        3) install_pnpm ;;
+        3) install_vim ;;
+        3) install_go ;;
+        3) install_sdkman ;;
+        4) exit 0;;
+        *) echo -e "${RED}Error...${STD}" && sleep 2
+    esac
+}
+
+
+# function to read input from the user and start the selected program installation
+# main loop
+while true
+do
+    show_menu
+done
