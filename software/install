@@ -149,6 +149,10 @@ install_alacritty() {
 
 }
 
+install_esbuild() {
+    curl -fsSL https://esbuild.github.io/dl/latest | sh
+}
+
 # function to display menus
 show_menu() {
     clear
@@ -157,7 +161,7 @@ show_menu() {
     echo "------------------------"
     
     programs=("firefox" "chrome" "vim" "nvim" "docker" "alacritty" "vscode"
-        "nvm" "gh" "sdkman")
+        "nvm" "gh" "sdkman" "esbuild")
 
     for ((i=0; i<${#programs[@]}; i++))
     do
@@ -178,6 +182,7 @@ show_menu() {
         8) install_nvm ;;
         9) install_gh ;;
         10) install_sdkman ;;
+        11) install_esbuild ;;
         0) exit 0;;
         *) echo -e "${RED}Error...${STD}" && sleep 2
     esac
