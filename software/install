@@ -153,6 +153,18 @@ install_esbuild() {
     curl -fsSL https://esbuild.github.io/dl/latest | sh
 }
 
+install_brave() {
+    sudo apt install curl
+
+    sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
+
+    echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main"|sudo tee /etc/apt/sources.list.d/brave-browser-release.list
+
+    sudo apt update
+
+    sudo apt install brave-browser
+}
+
 # function to display menus
 show_menu() {
     clear
@@ -183,6 +195,7 @@ show_menu() {
         9) install_gh ;;
         10) install_sdkman ;;
         11) install_esbuild ;;
+        12) install_brave ;;
         0) exit 0;;
         *) echo -e "${RED}Error...${STD}" && sleep 2
     esac
