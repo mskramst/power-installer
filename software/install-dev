@@ -1,0 +1,119 @@
+#!/bin/bash
+
+install_vscode() {
+    sudo apt update 
+    sudo apt install gnupg2 software-properties-common apt-transport-https curl -y
+    curl -sSL https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+    sudo add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
+    sudo apt update 
+    sudo apt install code -y
+    cp ../config/.vscode -R ~
+     
+}
+
+install_esbuild() {
+    echo "Installing esbuild..."
+    curl -fsSL https://esbuild.github.io/dl/latest | sh
+}
+
+install_sdkman() {
+    echo "Installing sdkman..."
+    sudo apt-get install zip -y
+    curl -s "https://get.sdkman.io" | bash
+#    source "$HOME/.sdkman/bin/sdkman-init.sh"
+}
+
+install_pnpm() {
+    echo "Installing pnpm..."
+    curl -fsSL https://get.pnpm.io/install.sh | sh -
+}
+
+install_gh() {
+    echo "Installing gh..."
+    type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y)
+    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+    && sudo apt update \
+    && sudo apt install gh -y
+}
+
+install_vim() {
+    echo "Installing vim..."
+    git clone https://github.com/vim/vim.git
+    cd vim 
+    make distclean
+    sudo apt-get install libncurses5-dev libncursesw5-dev -y
+    make
+    sudo make install
+
+    curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+}
+
+install_go() {
+    echo "Installing go..."
+    wget https://go.dev/dl/go1.20.1.linux-amd64.tar.gz
+    sudo tar -C /usr/local -xvf go1.12.6.linux-amd64.tar.gz
+    echo "export PATH=$PATH:/usr/local/go/bin" >> ~/.bashrc
+}
+
+install_docker() {
+    sudo update && sudo apt-get install \
+        apt-transport-https \
+        ca-certificates \
+        curl \
+        gnupg \
+        lsb-release
+
+    #Add docker key
+     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+    echo \
+      "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
+      $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+    sudo apt-get update  &&
+    sudo apt-get install docker-ce docker-ce-cli containerd.io
+    sudo usermod -aG docker $USER
+    sudo chmod 666 /var/run/docker.sock
+}
+
+# function to display menus
+show_menu() {
+    programs=("gh" "mods" "pnpm" "vim" "go" "docker" "esbuild" "sdkman")
+
+    clear
+    echo "------------------------"
+    echo " M A I N - M E N U"
+    echo "------------------------"
+    
+    for ((i=0; i<${#programs[@]}; i++))
+    do
+        echo "$i: ${programs[i]}"
+    done
+    echo "0. Exit"
+
+    local choice
+    read -p "Enter choice [ 1 - 4] " choice
+    case $choice in
+        1) install_gh ;;
+        2) install_mods ;;
+        3) install_pnpm ;;
+        4) install_vim ;;
+        5) install_go ;;
+        6) install_docker ;;
+        7) install_esbuild ;;
+        8) install_sdkman ;;
+        0) exit 0;;
+        *) echo -e "${RED}Error...${STD}" && sleep 2
+    esac
+}
+
+
+# function to read input from the user and start the selected program installation
+# main loop
+while true
+do
+    show_menu
+done
