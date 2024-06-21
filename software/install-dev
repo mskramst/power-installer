@@ -54,7 +54,7 @@ install_vim() {
 install_go() {
     echo "Installing go..."
     wget https://go.dev/dl/go1.20.1.linux-amd64.tar.gz
-    sudo tar -C /usr/local -xvf go1.12.6.linux-amd64.tar.gz
+    sudo tar -C /usr/local -xvf go1.20.1.linux-amd64.tar.gz
     echo "export PATH=$PATH:/usr/local/go/bin" >> ~/.bashrc
 }
 
@@ -81,7 +81,7 @@ install_docker() {
 
 # function to display menus
 show_menu() {
-    programs=("gh" "mods" "pnpm" "vim" "go" "docker" "esbuild" "sdkman")
+    programs=("" "gh" "mods" "pnpm" "vim" "go" "docker" "esbuild" "sdkman")
 
     clear
     echo "------------------------"
@@ -95,7 +95,7 @@ show_menu() {
     echo "0. Exit"
 
     local choice
-    read -p "Enter choice [ 1 - 4] " choice
+    read -p "Enter choice [ 1 - 8] " choice
     case $choice in
         1) install_gh ;;
         2) install_mods ;;

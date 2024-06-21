@@ -11,6 +11,12 @@ install_firefox() {
     && sudo apt install gh -y
 }
 
+install_bat() {
+    sudo apt-get install bat
+    mkdir -p ~/.local/bin
+    ln -s /usr/bin/batcat ~/.local/bin/bat
+}
+
 install_chrome() {
     echo "Installing chrome..."
     sudo mkdir -p /etc/apt/keyrings
@@ -114,7 +120,7 @@ show_menu() {
     echo " M A I N - M E N U"
     echo "------------------------"
     
-    programs=("firefox" "chrome" "brave" "vim" "nvim" "alacritty" "gh")
+    programs=("firefox" "chrome" "brave" "vim" "nvim" "alacritty" "gh" "bat")
 
     for ((i=0; i<${#programs[@]}; i++))
     do
@@ -132,6 +138,7 @@ show_menu() {
         5) install_nvim ;;
         6) install_alacritty ;;
         7) install_gh ;;
+        8) install_bat ;;
         0) exit 0;;
         *) echo -e "${RED}Error...${STD}" && sleep 2
     esac
