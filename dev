@@ -1,6 +1,6 @@
 #!/bin/bash	
 
-cd ~/repos/github.com/mskramst || exit
+cd "$GHREPOS" || exit
 git clone https://github.com/mskramst/dev.git
 cd dev || exit
 echo "Ready to code"

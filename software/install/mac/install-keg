@@ -1,0 +1,10 @@
+#!/bin/bash
+set -e
+
+mkdir -p ~/.local/bin || true
+tmpfile=$(mktemp)
+latest=$(curl -sSL "https://api.github.com/repos/rwxrob/keg/releases/latest" | jq -r .name)
+gh release download "$latest" -R rwxrob/keg -O "$tmpfile" -p "*$(uname -p)*" --clobber
+mv "$tmpfile" ~/.local/bin/keg
+chmod +x ~/.local/bin/keg
+
