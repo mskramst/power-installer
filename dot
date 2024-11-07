@@ -2,6 +2,8 @@
 git clone https://github.com/mskramst/mydotfiles
 cd mydotfiles || exit
 cp .bash_git .bashrc_ext .bash_aliases .bash_user .lang_aliases ~
-mv .vim ~
-mv .config ~
+rm -rf ~/.vim 
+cp .vim ~
+mv .config/kitty ~/.config
+mv .config/tmux ~/.tmux
 
