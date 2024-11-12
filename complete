@@ -1,0 +1,18 @@
+sudo apt-get update && sudo apt-get upgrade -y
+sudo apt-get install sudo -y
+sudo apt-get install git curl wget zip tmux kitty w3m vim -y
+sudo apt-get remove libreoffice* -y
+sudo apt-get autoremove -y
+
+rm -rf ~/.config
+rm ~/.bashrc
+rm -rf ~/.vim
+
+config () {
+'/usr/bin/git --git-dir=$HOME/.cfg --work-tree=$HOME' 
+}
+
+echo ".cfg" >> .gitignore
+git clone --bare https://github.com/mskramst/mydotfiles $HOME/.cfg
+git --git-dir=$HOME/.cfg/ --work-tree=$HOME checkout
+config config --local status.showUntrackedFiles no
