@@ -1,0 +1,46 @@
+#!/bin/bash
+
+    echo "Installing vscode"
+    sudo apt update 
+    sudo apt install gnupg2 software-properties-common apt-transport-https curl -y
+    curl -sSL https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+    sudo add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
+    sudo apt update 
+    sudo apt install code -y
+    cp ../config/.vscode -R ~
+
+    echo "Installing sdkman..."
+    sudo apt-get install zip -y
+    curl -s "https://get.sdkman.io" | bash
+
+    echo "Installing pnpm..."
+    curl -fsSL https://get.pnpm.io/install.sh | sh -
+
+    echo "Installing gh..."
+    type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y)
+    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+    | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture)
+        signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg]
+        https://cli.github.com/packages stable main" \
+    | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+    && sudo apt update \
+    && sudo apt install gh -y
+
+    echo "Installing go..."
+    wget https://go.dev/dl/go1.20.1.linux-amd64.tar.gz
+    sudo tar -C /usr/local -xvf go1.20.1.linux-amd64.tar.gz
+    echo "export PATH=$PATH:/usr/local/go/bin" >> ~/.bashrc
+
+    echo "installing mods"
+    sudo mkdir -p /etc/apt/keyrings
+    curl -fsSL https://repo.charm.sh/apt/gpg.key \
+    | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
+    echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/
+    * *" \
+    | sudo tee /etc/apt/sources.list.d/charm.list
+    sudo apt update && sudo apt install mods
+
+    echo "installing atuin"
+    curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
