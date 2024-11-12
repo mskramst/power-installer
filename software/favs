@@ -18,13 +18,10 @@
 
     echo "Installing gh..."
     type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y)
-    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
-    | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
     && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
     && echo "deb [arch=$(dpkg --print-architecture)
-        signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg]
-        https://cli.github.com/packages stable main" \
-    | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+        signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
     && sudo apt update \
     && sudo apt install gh -y
 
@@ -37,10 +34,14 @@
     sudo mkdir -p /etc/apt/keyrings
     curl -fsSL https://repo.charm.sh/apt/gpg.key \
     | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
-    echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/
-    * *" \
-    | sudo tee /etc/apt/sources.list.d/charm.list
+    echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ *" | sudo tee /etc/apt/sources.list.d/charm.list
     sudo apt update && sudo apt install mods
 
     echo "installing atuin"
     curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
+
+    echo "installing chrome"
+    sudo apt update && sudo apt install wget
+    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+    sudo apt install ./google-chrome-stable_current_amd64.deb -y
+    rm google-chrome-stable_current_amd64.deb
