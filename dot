@@ -1,4 +1,5 @@
 #!/bin/bash	
+# sets up dotfiles from mskramst's account
 git clone https://github.com/mskramst/mydotfiles
 cd mydotfiles || exit
 cp .bash_git .bashrc_ext .bash_aliases .bash_user .lang_aliases ~

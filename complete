@@ -1,22 +1,27 @@
+#!/bin/bash
 sudo apt-get update && sudo apt-get upgrade -y
 sudo apt-get install sudo -y
-sudo apt-get install git curl wget zip tmux kitty w3m vim fonts-inconsolata -y
+sudo apt-get install git curl wget zip tmux kitty w3m vim podman fonts-inconsolata -y
 sudo apt-get remove libreoffice* -y
 sudo apt-get autoremove -y
+mkdir -p repos/github.com/$USER
 
 rm -rf ~/.config
 rm ~/.bashrc
 rm -rf ~/.vim
 cat software/bashrc-loader >> ~/.bashrc
 
-config () {
-'/usr/bin/git --git-dir=$HOME/.cfg --work-tree=$HOME' 
-}
+#config () {
+#'/usr/bin/git --git-dir=$HOME/.cfg --work-tree=$HOME' 
+#}
 
 echo ".cfg" >> .gitignore
 git clone --bare https://github.com/mskramst/mydotfiles $HOME/.cfg
 git --git-dir=$HOME/.cfg/ --work-tree=$HOME checkout
-config config --local status.showUntrackedFiles no
+#config config --local status.showUntrackedFiles no
+git config --global init.defaultBranch main
+git config --global user.email "x@someplace.com" 
+git config --global user.name "x" 
 
 echo "copy key below into github ssh settings"
 ssh-keygen -t ed25519 <<<~/.ssh/id_ed25519 && cat ~/.ssh/id_ed25519.pub

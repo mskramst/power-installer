@@ -1,5 +1,5 @@
 #!/bin/bash	
-
+# sets up dev environment for many programming languages
 cd "$GHREPOS" || exit
 git clone https://github.com/mskramst/dev.git
 cd dev || exit
