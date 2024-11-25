@@ -3,6 +3,7 @@ sudo apt-get update && sudo apt-get upgrade -y
 sudo apt-get install sudo -y
 sudo apt-get install git curl wget zip tmux kitty w3m vim gh neovim podman fonts-inconsolata -y
 sudo apt-get remove libreoffice* -y
+sudo apt-get remove gnome-games evolution thunderbird rhythmbox shotwell
 sudo apt-get autoremove -y
 mkdir -p repos/github.com/$USER
 

@@ -1,0 +1,31 @@
+#Languages I use
+
+#Node
+#wget https://go.dev/dl/go1.20.1.linux-amd64.tar.gz
+#sudo tar -C /usr/local -xvf go1.20.1.linux-amd64.tar.gz
+#echo "export PATH=$PATH:/usr/local/go/bin" >> ~/.bashrc
+
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+#curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+
+#c
+sudo apt-get install build-essential
+
+#python
+sudo apt-get install software-properties-common 
+
+
+#java
+curl -s "https://get.sdkman.io" | bash
+
+#PHP
+sudo apt-get update && sudo apt-get install php7
+wget https://raw.githubusercontent.com/composer/getcomposer.org/76a7060ccb93902cd7576b67264ad91c8a2700e2/web/installer -O - -q | php -- --quiet
+sudo mv composer.phar /usr/local/bin
+
+#golang
+wget https://go.dev/dl/go1.20.1.linux-amd64.tar.gz
+sudo tar -C /usr/local -xvf go1.20.1.linux-amd64.tar.gz
+echo "export PATH=$PATH:/usr/local/go/bin" >> ~/.bashrc
+
+
