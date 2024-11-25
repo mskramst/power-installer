@@ -1,8 +1,13 @@
 #!/bin/bash
-sudo su
-apt install xorg
-apt --no-install-recommends lxqt-core
-reboot now
+sudo apt install task-lxqt-desktop
+sudo apt install adwaita-qt
+#remove lbqt
+#sudo apt autoremove '^lxqt' task-lxqt-desktop --purge
+
+#sudo su
+#apt install xorg
+#apt --no-install-recommends lxqt-core
+#reboot now
 
 #sudo su
 #apt install sddm
