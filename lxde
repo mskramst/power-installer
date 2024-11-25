@@ -1,0 +1,6 @@
+sudo apt install xserver-xorg-core
+sudo apt install openbox
+sudo apt install xinit
+
+sudo apt install --no-install-recommends --no-install-suggests xdg-utils libnotify4
+sudo apt install lxsession
