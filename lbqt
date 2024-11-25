@@ -1,0 +1,13 @@
+#!/bin/bash
+sudo su
+apt install xorg
+apt --no-install-recommends lxqt-core
+reboot now
+
+#sudo su
+#apt install sddm
+#reboot now
+
+#sudo su
+#apt install openbox
+#reboot now
