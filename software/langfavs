@@ -24,8 +24,8 @@ wget https://raw.githubusercontent.com/composer/getcomposer.org/76a7060ccb93902c
 sudo mv composer.phar /usr/local/bin
 
 #golang
-wget https://go.dev/dl/go1.20.1.linux-amd64.tar.gz
-sudo tar -C /usr/local -xvf go1.20.1.linux-amd64.tar.gz
+wget https://go.dev/dl/go1.23.3.linux-amd64.tar.gz
+sudo tar -C /usr/local -xvf go1.23.3.linux-amd64.tar.gz
 echo "export PATH=$PATH:/usr/local/go/bin" >> ~/.bashrc
 
 
