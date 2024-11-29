@@ -1,11 +1,20 @@
 #!/bin/bash
+# install important programs and remove unimportant files
+if [ -f $HOME/starter.sh ]; then
+	rm starter.sh
+fi
+
 sudo apt-get update && sudo apt-get upgrade -y
 sudo apt-get install sudo -y
-sudo apt-get install git curl wget zip tmux kitty w3m vim gh neovim podman fonts-inconsolata -y
+sudo apt-get install git curl wget zip tmux w3m vim gh podman fonts-inconsolata -y
 sudo apt-get remove libreoffice* -y
 sudo apt-get remove gnome-games evolution thunderbird rhythmbox shotwell
 sudo apt-get autoremove -y
 mkdir -p repos/github.com/$USER
+
+# newest versions of kitt terminal and neovim installed here
+~/software/kitty
+~/software/nvim-latest
 
 rm -rf ~/.config
 rm ~/.bashrc
@@ -21,10 +30,9 @@ git clone --bare https://github.com/mskramst/mydotfiles $HOME/.cfg
 git --git-dir=$HOME/.cfg/ --work-tree=$HOME checkout
 #config config --local status.showUntrackedFiles no
 git config --global init.defaultBranch main
-git config --global user.email "$USER@earth.com" 
+git config --global user.email "" 
 git config --global user.name $USER 
-
-echo "copy key below into github ssh settings"
+echo -e "\ncopy key below into github ssh settings"
 ssh-keygen -t ed25519 <<<~/.ssh/id_ed25519 && cat ~/.ssh/id_ed25519.pub
 gh auth login -s admin:public_key
 

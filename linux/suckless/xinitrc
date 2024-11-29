@@ -1,0 +1,4 @@
+xrandr --output Virtual1 --mode 1920x1080 &
+xcompmgr -c -C -t-5 -l-5 -r4.2 -o.55 &
+feh --bg-fill ~/Pictures/starry-sky.jpg &
+exec dwm

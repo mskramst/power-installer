@@ -1,0 +1,27 @@
+#!/bin/bash
+# setup dwm
+# https://www.youtube.com/watch?v=FnrFjW-UqTE
+sudo apt-get intall xserver-xorg-core xinit xinput x11-xserver-utils -y
+sudo apt-get install build-essential git make alacritty xcompmgr firefox-esr feh pipewire -y
+sudo apt-get install libx11-dev libxft-dev libxinerama-dev -y
+
+mkdir -p ~/.config/suckless && cd "$_" || exit
+
+for repo in dwm st dmenu; do
+		git clone https://git.suckless.org/"$repo"
+		cd "$repo" && sudo make clean install && cd ..
+done
+
+mkdir patches && cd "$_" || exit
+
+# https://www.youtube.com/watch?v=bCPFy5o7OQk
+wget https://dwm.suckless.org/patches/attachbelow/dwm-attachbelow-6.2.diff
+wget https://dwm.suckless.org/patches/vanitygaps/dwm-vanitygaps-6.2.diff
+wget https://dwm.suckless.org/patches/alwayscenter/dwm-alwayscenter-20200625-f04cac6.diff
+wget https://dwm.suckless.org/patches/actualfullscreen/dwm-actualfullscreen-20211013-cb3f58a.diff
+
+mkdir "$HOME"/Pictures
+cp ../../software/mywallpapers/starry-sky.jpg "$HOME"/Pictures
+cp xinitrc "$HOME"/.xinitrc
+echo "startx" > "$HOME"/.bash_profile
+
