@@ -1,7 +1,7 @@
 #!/bin/bash
 # install important programs and remove unimportant files
-if [ -f $HOME/starter.sh ]; then
-	rm starter.sh
+if [ -f "$HOME"/starter.sh ]; then
+	rm "$HOME"/starter.sh
 fi
 
 sudo apt-get update && sudo apt-get upgrade -y
@@ -16,7 +16,6 @@ mkdir -p repos/github.com/$USER
 software/kitty
 software/nvim-latest
 
-rm -rf ~/.config
 rm ~/.bashrc
 rm -rf ~/.vim
 cat software/bashrc-loader >> ~/.bashrc

@@ -1,9 +1,10 @@
 #!/bin/bash	
 # setup dot files
+sudo apt-get install git curl wget zip tmux w3m vim gh podman fonts-inconsolata -y
 rm -rf ~/.config
 rm ~/.bashrc
 rm -rf ~/.vim
-ca software/bashrc-loader >> ~/.bashrc
+cat software/bashrc-loader >> ~/.bashrc
 
 echo ".cfg" >> .gitignore
 git clone --bare https://github.com/mskramst/mydotfiles "$HOME"/.cfg
