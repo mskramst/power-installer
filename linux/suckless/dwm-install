@@ -4,7 +4,7 @@
 cp xinitrc "$HOME"/.xinitrc
 echo "startx" > "$HOME"/.bash_profile
 sudo apt-get install xserver-xorg-core xinit xinput x11-xserver-utils -y
-sudo apt-get install build-essential git make alacritty xcompmgr feh pipewire -y
+sudo apt-get install build-essential git make xcompmgr vim kitty feh firefox-esr -y
 sudo apt-get install libx11-dev libxft-dev libxinerama-dev -y
 
 mkdir -p ~/.config/suckless && cd "$_" || exit
@@ -24,6 +24,6 @@ wget https://dwm.suckless.org/patches/actualfullscreen/dwm-actualfullscreen-2021
 
 mkdir "$HOME"/Pictures && cd "$_" || exit
 installdir="$HOME/repos/github.com/$USER/power-installer"
-echo "$installdir/software/mywallpapers/starry-sky.jpg" .
+cp "$installdir/software/mywallpapers/starry-sky.jpg" "$HOME"/Pictures
 mv -f "$installdir"/linux/suckless/config.h "$HOME"/.config/suckless/dwm
 ./update-dwm
