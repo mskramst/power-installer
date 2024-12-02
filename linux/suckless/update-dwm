@@ -1,0 +1,3 @@
+#!/bin/bash	
+installdir="$HOME/repos/github.com/$USER/power-installer"
+cp "$installdir/software/mywallpapers/starry-sky.jpg" .

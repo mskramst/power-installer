@@ -23,5 +23,7 @@ wget https://dwm.suckless.org/patches/alwayscenter/dwm-alwayscenter-20200625-f04
 wget https://dwm.suckless.org/patches/actualfullscreen/dwm-actualfullscreen-20211013-cb3f58a.diff
 
 mkdir "$HOME"/Pictures && cd "$_" || exit
-cp $HOME/repos/github.com/"$USER"/power-installer/software/mywallpapers/starry-sky.jpg .
-
+installdir="$HOME/repos/github.com/$USER/power-installer"
+echo "$installdir/software/mywallpapers/starry-sky.jpg" .
+mv -f "$installdir"/linux/suckless/config.h "$HOME"/.config/suckless/dwm
+./update-dwm
