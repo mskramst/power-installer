@@ -26,4 +26,5 @@ mkdir "$HOME"/Pictures && cd "$_" || exit
 installdir="$HOME/repos/github.com/$USER/power-installer"
 cp "$installdir/software/mywallpapers/starry-sky.jpg" "$HOME"/Pictures
 mv -f "$installdir"/linux/suckless/config.h "$HOME"/.config/suckless/dwm
+cd "$installdir"/linux/suckless || exit
 ./update-dwm

@@ -13,7 +13,7 @@ sudo apt-get remove gnome-games evolution thunderbird rhythmbox shotwell
 sudo apt-get autoremove -y
 mkdir -p repos/github.com/$USER
 
-# newest versions of kitt terminal and neovim installed here
+# Consider installing newest versions of kitty terminal and neovim installed here
 #software/kitty
 #software/nvim-latest
 
@@ -23,4 +23,4 @@ sudo update-alternatives --install /usr/bin/www-browser www-browser
 rm ~/.bashrc
 rm -rf ~/.vim
 cat software/bashrc-loader >> ~/.bashrc
-
+./setup-git
