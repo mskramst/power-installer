@@ -6,10 +6,10 @@ fi
 
 sudo apt-get update && sudo apt-get upgrade -y
 sudo apt-get install sudo -y
-sudo apt-get install git curl wget zip tmux w3m vim gh podman fonts-inconsolata
-kitty firefox-esr -y
+sudo apt-get install git curl wget zip tmux w3m vim podman fonts-inconsolata -y
+sudo apt-get install kitty firefox-esr gh -y
 sudo apt-get remove libreoffice* -y
-sudo apt-get remove gnome-games evolution thunderbird rhythmbox shotwell
+sudo apt-get remove gnome-games evolution thunderbird rhythmbox shotwell -y
 sudo apt-get autoremove -y
 mkdir -p repos/github.com/$USER
 
