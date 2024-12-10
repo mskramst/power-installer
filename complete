@@ -23,4 +23,4 @@ sudo update-alternatives --install /usr/bin/www-browser www-browser
 rm ~/.bashrc
 rm -rf ~/.vim
 cat software/bashrc-loader >> ~/.bashrc
-./setup-git
+echo "relaunch terminal kitty and run ./setup-git"
