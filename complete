@@ -7,9 +7,9 @@ fi
 sudo apt-get update && sudo apt-get upgrade -y
 sudo apt-get install sudo -y
 sudo apt-get install git curl wget zip tmux w3m vim podman fonts-inconsolata -y
-sudo apt-get install kitty firefox-esr gh -y
-sudo apt-get remove libreoffice* -y
-sudo apt-get remove gnome-games evolution thunderbird rhythmbox shotwell -y
+sudo apt-get install firefox-esr feh gh -y
+sudo apt-get remove nano libreoffice* -y
+sudo apt-get remove gnome-games cheese evolution thunderbird rhythmbox shotwell -y
 sudo apt-get autoremove -y
 mkdir -p repos/github.com/$USER
 
@@ -22,4 +22,4 @@ sudo update-alternatives --install /usr/bin/www-browser www-browser /usr/bin/fir
 rm ~/.bashrc
 rm -rf ~/.vim
 cat software/bashrc-loader >> ~/.bashrc
-echo "relaunch terminal kitty and run ./setup-git"
+./setup-git
