@@ -1,0 +1,11 @@
+#!/bin/bash
+# install important programs and remove unimportant files
+if [ -f "$HOME"/starter.sh ]; then
+	rm "$HOME"/starter.sh
+fi
+
+sudo apt-get update && sudo apt-get upgrade -y
+sudo apt-get install sudo -y
+sudo apt-get install git curl wget zip tmux w3m vim podman fonts-inconsolata -y
+sudo apt-get install firefox-esr kitty feh gh -y
+sudo apt-get autoremove -y
