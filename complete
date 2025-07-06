@@ -11,3 +11,4 @@ sudo apt-get install firefox-esr kitty feh gh -y
 sudo apt-get remove nano libreoffice* -y
 sudo apt-get remove gnome-games cheese evolution thunderbird rhythmbox shotwell -y
 sudo apt-get autoremove -y
+sh -c "$(curl -fsLS get.chezmoi.io)"
