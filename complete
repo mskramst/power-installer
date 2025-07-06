@@ -7,7 +7,7 @@ fi
 sudo apt-get update && sudo apt-get upgrade -y
 sudo apt-get install sudo -y
 sudo apt-get install git curl wget zip tmux w3m vim podman fonts-inconsolata -y
-sudo apt-get install firefox-esr kitty feh gh -y
+sudo apt-get install firefox-esr kitty feh gh bat shellcheck -y
 sudo apt-get remove nano libreoffice* -y
 sudo apt-get remove gnome-games cheese evolution thunderbird rhythmbox shotwell -y
 sudo apt-get autoremove -y
