@@ -1,0 +1,3 @@
+#!/bin/bash	
+
+scp nameoffile.txt username@webaddress:/var/www/html/foldername/nameoffile.txt

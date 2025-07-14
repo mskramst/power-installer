@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# This script adds the current user to the 'sudo' group.
+# It requires superuser privileges to run.
+
+echo "Attempting to add the current user to the 'sudo' group..."
+
+# Get the current username
+CURRENT_USER=$(whoami)
+
+# Check if the user is already in the sudo group
+# 'groups' command lists groups a user belongs to.
+# 'grep -w' ensures whole word matching for "sudo".
+if groups "$CURRENT_USER" | grep -qw "sudo"; then
+    echo "User '$CURRENT_USER' is already a member of the 'sudo' group."
+else
+    # Add the user to the sudo group.
+    # 'usermod -aG sudo' appends the user to the 'sudo' group.
+    # 'sudo' is used here to execute 'usermod' with root privileges.
+    sudo usermod -aG sudo "$CURRENT_USER"
+
+    # Check if the command was successful
+    if [ $? -eq 0 ]; then
+        echo "User '$CURRENT_USER' has been successfully added to the 'sudo' group."
+        echo "You may need to log out and log back in for the changes to take effect."
+    else
+        echo "Failed to add user '$CURRENT_USER' to the 'sudo' group."
+        echo "Please ensure you have the necessary permissions (e.g., run this script with 'sudo')."
+    fi
+fi
+
+echo "Script finished."
