@@ -1,5 +1,22 @@
-sudo mkdir -p /etc/apt/keyrings
-curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
-echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list
-sudo apt update && sudo apt install mods
-echo " Go to https://platform.openai.com/account/api-keys and export OPENAI_AI_KEY in .bashrc"
+#!/bin/bash 
+# This script checks the operating system and outputs a different message
+# based on whether it's macOS or Linux.
+
+# Use 'uname -s' to get the operating system name.
+# 'uname -s' outputs "Darwin" for macOS and "Linux" for Linux distributions.
+OS_NAME=$(uname -s)
+
+# Check the value of OS_NAME and print the appropriate message.
+if [ "$OS_NAME" = "Darwin" ]; then
+  brew install charmbracelet/tap/mods
+  echo " Go to https://platform.openai.com/account/api-keys and export OPENAI_AI_KEY in .bashrc"
+elif [ "$OS_NAME" = "Linux" ]; then
+  sudo mkdir -p /etc/apt/keyrings
+  curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
+  echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list
+  sudo apt update && sudo apt install mods
+  echo " Go to https://platform.openai.com/account/api-keys and export OPENAI_AI_KEY in .bashrc"
+else
+  # Handle other potential operating systems (e.g., Cygwin, FreeBSD)
+  echo "You are running an unknown operating system: $OS_NAME"
+fi

@@ -1,0 +1,4 @@
+#!/bin/bash	
+# sets up dotfiles
+chezmoi init https://www.github.com/mskramst/mydot.git
+# commands to remember: chezmoi apply, chezmoi update, chezmoi cd
