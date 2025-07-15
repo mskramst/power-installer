@@ -1,0 +1,3 @@
+#!/bin/bash	
+apt-get update && apt-get upgrade
+sudo apt-get install man git curl wget zip tmux w3m vim gh bat shellcheck vim
