@@ -15,3 +15,6 @@ https://www.pling.com/p/1891042/
 
 # Future Cursors
 https://www.gnome-look.org/p/998388
+
+#
+gtk-update-icon-cache ~/.local/share/icons/Zafiro-Nord
