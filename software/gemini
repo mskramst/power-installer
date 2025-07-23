@@ -1,0 +1,3 @@
+#!/bin/bash	
+# installs the gemini cli
+npm install -g @google/gemini-cli
