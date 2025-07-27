@@ -2,4 +2,5 @@
 sudo apt-get update && sudo apt-get upgrade -y
 sudo apt-get install sudo man curl wget zip git tmux w3m vim -y
 sudo apt-get install wezterm fonts-inconsolata -y
-sudo apt-get install feh gh bat shellcheck -y
+sudo apt-get install firefox-esr feh gh bat shellcheck -y
+alias pi="cd ~/repos/github.com/$USER/power-installer"
