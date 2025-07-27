@@ -1,5 +1,9 @@
 #!/bin/bash	
-git clone https://github.com/itsfoss/text-script-files.git
-mv -R text-script-files/config/polybar ~/.config
-cd ~/.config/polybar || exit
-sed -i "HTML-1/Virtual1/g"
+#git clone https://github.com/itsfoss/text-script-files.git
+#mv -R text-script-files/config/polybar ~/.config
+#cd ~/.config/polybar || exit
+#sed -i 's/HDMI-1/Virtual1/g' config.ini
+git clone https://github.com/catppuccin/rofi.git
+mv rofi ~/.config
+sed -i '1i @import "catppuccin-frappe"' ~/.config/rofi/catppuccin-default.rasi
+touch ~/.config/rofi/config.rasi
