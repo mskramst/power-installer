@@ -8,7 +8,7 @@ mkdir ~/.fonts
 git clone https://github.com/zayronxio/Zafiro-Nord-Dark
 git clone https://github.com/EliverLara/Nordic
 git clone https://github.com/yeyushengfan258/Future-cursors
-wget https://github.com/EliverLara/Nordic/blob/master/extras/wallpapers/nordic-wall.jpg
+wget https://raw.githubusercontent.com/EliverLara/Nordic/refs/heads/master/extras/wallpapers/nordic-wall.jpg
 wget https://download.jetbrains.com/fonts/JetBrainsMono-2.304.zip
 wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/FiraCode.zip
 mv Nordic ~/.themes

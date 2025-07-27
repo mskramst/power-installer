@@ -1,0 +1,5 @@
+#!/bin/bash	
+git clone https://github.com/itsfoss/text-script-files.git
+mv -R text-script-files/config/polybar ~/.config
+cd ~/.config/polybar || exit
+sed -i "HTML-1/Virtual1/g"
