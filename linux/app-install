@@ -1,4 +1,5 @@
 #!/bin/bash	
+sudo apt-get install plank polybar rofi
 #git clone https://github.com/itsfoss/text-script-files.git
 #mv -R text-script-files/config/polybar ~/.config
 #cd ~/.config/polybar || exit
@@ -7,5 +8,8 @@ git clone https://github.com/catppuccin/rofi.git
 mv rofi ~/.config
 sed -i '1i @import "catppuccin-frappe"' ~/.config/rofi/catppuccin-default.rasi
 touch ~/.config/rofi/config.rasi
+echo "@theme 'catppuccin-default'" > ~/.config/rofi/config.rasi
+mkdir ~/.config/autostart
+cp xfce-config Plank.desktop Polybar.desktop ~/.config/autostart
 
 

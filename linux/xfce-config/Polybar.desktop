@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Polybar
+Comment=Simple, clean, and fast dock
+Exec=plank
+Icon=plank
+Terminal=false
+Type=Application
+Categories=System
+StartupNotify=true
+Hidden=false
