@@ -7,3 +7,5 @@ git clone https://github.com/catppuccin/rofi.git
 mv rofi ~/.config
 sed -i '1i @import "catppuccin-frappe"' ~/.config/rofi/catppuccin-default.rasi
 touch ~/.config/rofi/config.rasi
+
+
