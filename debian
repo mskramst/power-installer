@@ -2,5 +2,7 @@
 sudo apt-get update && sudo apt-get upgrade -y
 sudo apt-get install sudo man curl wget zip git tmux w3m vim -y
 sudo apt-get install wezterm fonts-inconsolata -y
-sudo apt-get install firefox-esr feh gh bat shellcheck -y
-alias pi="cd ~/repos/github.com/$USER/power-installer"
+sudo apt-get install firefox-esr feh gh bat shellcheck snapd -y
+alias pi='cd $HOME/repos/github.com/$USER/power-installer'
+sudo snap install chezmoi --classic
+chezmoi init https://www.github.com/mskramst/mydot.git
