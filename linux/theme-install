@@ -15,25 +15,25 @@ mv Nordic ~/.themes
 mv Zafiro-Nord-Dark ~/.local/share/icons
 mv Future-cursors ~/.local/share/icons
 mv nordic-wall.jpg ~/Pictures/Wallpapers
+unzip FiraCode.zip
+mv FiraCode* ~/.fonts
+(
 mkdir JetBrains
 unzip JetBrainsMono-2.304.zip JetBrains/
 cd JetBrains/fonts/ttf || exit
-unzip FiraCode.zip
-mv FiraCode*.* ~/.fonts
+cp JetBrains* ~/.fonts
 mv *.* ~/.fonts
+)
 
 #App Install
 sudo apt-get install plank polybar rofi
-#git clone https://github.com/itsfoss/text-script-files.git
-#mv -R text-script-files/config/polybar ~/.config
-#cd ~/.config/polybar || exit
-#sed -i 's/HDMI-1/Virtual1/g' config.ini
 git clone https://github.com/catppuccin/rofi.git
-mv rofi ~/.config
+mv rofi/ ~/.config
 sed -i '1i @import "catppuccin-frappe"' ~/.config/rofi/catppuccin-default.rasi
 touch ~/.config/rofi/config.rasi
-echo "@theme 'catppuccin-default'" > ~/.config/rofi/config.rasi
+echo '@theme "catppuccin-default"' > ~/.config/rofi/config.rasi
 mkdir ~/.config/autostart
-cp xfce-config Plank.desktop Polybar.desktop ~/.config/autostart
-
-
+(
+cd xfce-config || exit
+cp lank.desktop Polybar.desktop ~/.config/autostart
+)
