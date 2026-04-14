@@ -1,8 +1,44 @@
-#!/bin/bash	
-git clone https://github.com/mskramst/dotfiles
-rm ~/.bashrc
-cd dotfiles
-cp .bash_git .bashrc .bash_aliases ~
-cp -R .vim ~
+#!/usr/bin/env bash
+set -euo pipefail
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/install/install-lib.sh"
 
+REPO_URL="https://github.com/mskramst/dotfiles"
+DEST_DIR="${DEST_DIR:-$HOME/dotfiles}"
+DRY_RUN="${DRY_RUN:-0}"
+YES="${YES:-0}"
 
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --dry-run) DRY_RUN=1; shift ;;
+    --yes|-y) YES=1; shift ;;
+    --dest) DEST_DIR="$2"; shift 2 ;;
+    --repo) REPO_URL="$2"; shift 2 ;;
+    *) echo "Unknown arg: $1"; exit 2 ;;
+  esac
+done
+
+require_cmds git rsync
+OS="$(detect_os)"
+echo "Detected OS: $OS"
+
+if [ -d "$DEST_DIR/.git" ]; then
+  echo "Updating existing dotfiles in $DEST_DIR"
+  run_cmd "git -C '$DEST_DIR' fetch --quiet --all"
+  run_cmd "git -C '$DEST_DIR' pull --ff-only || true"
+else
+  echo "Cloning $REPO_URL -> $DEST_DIR"
+  run_cmd "git clone '$REPO_URL' '$DEST_DIR'"
+fi
+
+# install files
+copy_if_needed "$DEST_DIR/.bashrc" "$HOME/.bashrc"
+copy_if_needed "$DEST_DIR/.bash_aliases" "$HOME/.bash_aliases"
+copy_if_needed "$DEST_DIR/.bash_git" "$HOME/.bash_git"
+
+if [ -d "$DEST_DIR/.vim" ]; then
+  echo "Syncing .vim -> ~/.vim"
+  rsync_dir_if_needed "$DEST_DIR/.vim" "$HOME/.vim"
+fi
+
+echo "Dotfiles install/update complete. Backups (if any) are in ${BACKUP_DIR:-$HOME/.power-installer-backups}"

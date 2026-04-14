@@ -1,11 +1,39 @@
-#Installs old stable version 0.4
-#sudo add-apt-repository ppa:neovim-ppa/unstable
-#sudo apt-get update
-#isudo apt-get install neovim
+#!/usr/bin/env bash
+set -euo pipefail
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/install/install-lib.sh"
 
-sudo apt-get install ninja-build gettext libtool libtool-bin autoconf automake
-cmake g++ pkg-config unzip curl doxygen -y
-git clone https://github.com/neovim/neovim.git
-cd neovim
-make CMAKE_BUILD_TYPE=RelWithDebInfo
-sudo make install
+DRY_RUN="${DRY_RUN:-0}"
+YES="${YES:-0}"
+REPO_URL="https://github.com/neovim/neovim.git"
+NEOVIM_DIR="${NEOVIM_DIR:-$HOME/src/neovim}"
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --dry-run) DRY_RUN=1; shift ;;
+    --yes|-y) YES=1; shift ;;
+    --dest|--dir) NEOVIM_DIR="$2"; shift 2 ;;
+    --repo) REPO_URL="$2"; shift 2 ;;
+    *) echo "Unknown arg: $1"; exit 2 ;;
+  esac
+done
+
+require_cmds git make cmake gcc pkg-config
+OS="$(detect_os)"
+echo "Detected OS: $OS"
+
+if [ -d "$NEOVIM_DIR/.git" ]; then
+  echo "Updating neovim in $NEOVIM_DIR"
+  run_cmd "git -C '$NEOVIM_DIR' fetch --quiet --all"
+  run_cmd "git -C '$NEOVIM_DIR' pull --ff-only || true"
+else
+  echo "Cloning neovim -> $NEOVIM_DIR"
+  run_cmd "mkdir -p '$(dirname "$NEOVIM_DIR")' && git clone '$REPO_URL' '$NEOVIM_DIR'"
+fi
+
+confirm_or_die "Build and install neovim from source? This may take several minutes. Continue?"
+
+run_cmd "cd '$NEOVIM_DIR' && make CMAKE_BUILD_TYPE=RelWithDebInfo"
+run_cmd "sudo make -C '$NEOVIM_DIR' install"
+
+echo "Neovim build/install complete."
