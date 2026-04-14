@@ -92,7 +92,7 @@ else
   local_tar="/tmp/go${GO_VERSION}.linux-amd64.tar.gz"
   run_cmd "wget -O '$local_tar' https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz"
   run_cmd "sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf '$local_tar'"
-  if ! grep -q '/usr/local/go/bin' <<< "$(cat $HOME/.bashrc 2>/dev/null || true)"; then
+  if ! grep -q '/usr/local/go/bin' <<< "$(cat "$HOME"/.bashrc 2>/dev/null || true)"; then
     run_cmd "echo 'export PATH=\"\$PATH:/usr/local/go/bin\"' >> '$HOME/.bashrc'"
   fi
 fi
@@ -106,6 +106,23 @@ else
   run_cmd "curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg"
   run_cmd "echo 'deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ *' | sudo tee /etc/apt/sources.list.d/charm.list"
   apt_install_if_needed mods || true
+fi
+
+# wezterm
+if command -v wezterm >/dev/null 2>&1; then
+  echo "wezterm already installed"
+else
+  echo "Installing wezterm"
+  add_apt_keyring_repo "https://wezfurlong.org/wezterm/apt/wezterm.asc" "/etc/apt/keyrings/wezterm.gpg" "wezterm.list" "deb [signed-by=/etc/apt/keyrings/wezterm.gpg] https://wezfurlong.org/wezterm/apt/ $(lsb_release -cs) main"
+  apt_install_if_needed wezterm || true
+fi
+
+# chezmoi
+if command -v chezmoi >/dev/null 2>&1; then
+  echo "chezmoi already installed"
+else
+  echo "Installing chezmoi"
+  run_cmd "sh -c \"\$(curl -fsLS get.chezmoi.io)\" -- -b /usr/local/bin"
 fi
 
 # atuin
