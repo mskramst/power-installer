@@ -79,6 +79,31 @@ else
   run_cmd "curl -fsSL https://get.pnpm.io/install.sh | sh -"
 fi
 
+# Node via nvm (LTS)
+if command -v node >/dev/null 2>&1; then
+  echo "node already installed: $(node --version)"
+else
+  echo "Installing Node LTS via nvm"
+  # Install nvm if needed
+  if [ ! -d "$HOME/.nvm" ] && ! command -v nvm >/dev/null 2>&1; then
+    run_cmd "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash"
+  fi
+  # Ensure nvm is available in this shell
+  export NVM_DIR="$HOME/.nvm"
+  if [ -s "$NVM_DIR/nvm.sh" ]; then
+    # shellcheck disable=SC1091
+    # shellcheck disable=SC1090
+    . "$NVM_DIR/nvm.sh"
+  elif [ -s "$HOME/.nvm/nvm.sh" ]; then
+    . "$HOME/.nvm/nvm.sh"
+  else
+    echo "nvm not found after install; please source your shell profile and re-run" >&2
+  fi
+  # Install LTS and set default
+  run_cmd "nvm install --lts"
+  run_cmd "nvm alias default 'lts/*' || true"
+fi
+
 # GitHub CLI (gh)
 if command -v gh >/dev/null 2>&1; then
   echo "gh already installed"
