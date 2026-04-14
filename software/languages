@@ -1,8 +1,59 @@
-#Node
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
-#Java
-curl -s "https://get.sdkman.io" | bash
-#PHP
-sudo apt-get update && sudo apt-get install php7
-wget https://raw.githubusercontent.com/composer/getcomposer.org/76a7060ccb93902cd7576b67264ad91c8a2700e2/web/installer -O - -q | php -- --quiet
-sudo mv composer.phar /usr/local/bin
+#!/usr/bin/env bash
+set -euo pipefail
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/install/install-lib.sh"
+
+DRY_RUN="${DRY_RUN:-0}"
+YES="${YES:-0}"
+GO_VERSION="${GO_VERSION:-1.23.3}"
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --dry-run) DRY_RUN=1; shift ;;
+    --yes|-y) YES=1; shift ;;
+    --go) GO_VERSION="$2"; shift 2 ;;
+    *) echo "Unknown arg: $1"; exit 2 ;;
+  esac
+done
+
+require_cmds curl wget gpg dpkg
+
+# nvm
+if command -v nvm >/dev/null 2>&1 || [ -d "$HOME/.nvm" ]; then
+  echo "nvm already present"
+else
+  echo "Installing nvm"
+  run_cmd "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash"
+fi
+
+# sdkman
+if [ -d "$HOME/.sdkman" ] || command -v sdk >/dev/null 2>&1; then
+  echo "sdkman present"
+else
+  echo "Installing sdkman"
+  run_cmd "curl -s 'https://get.sdkman.io' | bash"
+fi
+
+# PHP + composer
+if command -v composer >/dev/null 2>&1; then
+  echo "composer present"
+else
+  echo "Installing composer"
+  run_cmd "wget -q -O - https://raw.githubusercontent.com/composer/getcomposer.org/76a7060ccb93902cd7576b67264ad91c8a2700e2/web/installer | php -- --quiet"
+  run_cmd "sudo mv composer.phar /usr/local/bin/composer"
+fi
+
+# golang
+if command -v go >/dev/null 2>&1; then
+  echo "go present: $(go version)"
+else
+  echo "Installing Go $GO_VERSION"
+  local_tar="/tmp/go${GO_VERSION}.linux-amd64.tar.gz"
+  run_cmd "wget -O '$local_tar' https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz"
+  run_cmd "sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf '$local_tar'"
+  if ! grep -q '/usr/local/go/bin' <<< "$(cat $HOME/.bashrc 2>/dev/null || true)"; then
+    run_cmd "echo 'export PATH=\"\$PATH:/usr/local/go/bin\"' >> '$HOME/.bashrc'"
+  fi
+fi
+
+echo "language environment installs complete. Backups (if any): ${BACKUP_DIR:-$HOME/.power-installer-backups}"
