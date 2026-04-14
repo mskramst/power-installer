@@ -1,0 +1,4 @@
+#!/bin/bash
+sudo apt-get update && sudo apt-get upgrade -y
+sudo apt-get install sudo man curl wget zip git tmux w3m vim -y
+sudo apt-get install gh bat shellcheck -y
