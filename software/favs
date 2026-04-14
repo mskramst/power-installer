@@ -18,6 +18,10 @@ done
 
 require_cmds curl wget gpg lsb_release dpkg
 
+# Detect OS (uses install-lib detect_os)
+OS="$(detect_os)"
+echo "Detected OS: $OS"
+
 apt_update_done=0
 apt_update() {
   if [ $apt_update_done -eq 0 ]; then
@@ -32,7 +36,7 @@ apt_install_if_needed() {
     echo "Package $pkg already installed"
   else
     apt_update
-    run_cmd "sudo apt-get install -y $pkg"
+    run_cmd "sudo apt-get install -y --no-install-recommends $pkg"
   fi
 }
 
@@ -88,12 +92,25 @@ fi
 if command -v go >/dev/null 2>&1; then
   echo "go is present: $(go version)"
 else
-  echo "Installing Go $GO_VERSION"
-  local_tar="/tmp/go${GO_VERSION}.linux-amd64.tar.gz"
-  run_cmd "wget -O '$local_tar' https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz"
-  run_cmd "sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf '$local_tar'"
-  if ! grep -q '/usr/local/go/bin' <<< "$(cat "$HOME"/.bashrc 2>/dev/null || true)"; then
-    run_cmd "echo 'export PATH=\"\$PATH:/usr/local/go/bin\"' >> '$HOME/.bashrc'"
+  echo "Installing Go"
+  if [ "$OS" = "macos" ]; then
+    # Homebrew path
+    if ! command -v brew >/dev/null 2>&1; then
+      echo "Homebrew not found; installing Homebrew"
+      run_cmd '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
+    fi
+    run_cmd "brew install go"
+  else
+    if [ -z "${GO_VERSION:-}" ] || [ "$GO_VERSION" = "latest" ]; then
+      GO_VERSION="$(curl -sS https://go.dev/VERSION?m=text 2>/dev/null | sed 's/^go//')"
+      echo "Resolved latest Go version: $GO_VERSION"
+    fi
+    local_tar="/tmp/go${GO_VERSION}.linux-amd64.tar.gz"
+    run_cmd "wget -O '$local_tar' https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz"
+    run_cmd "sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf '$local_tar'"
+    if ! grep -q '/usr/local/go/bin' <<< "$(cat \"$HOME\"/.bashrc 2>/dev/null || true)"; then
+      run_cmd "echo 'export PATH=\\"\\$PATH:/usr/local/go/bin\\"' >> '$HOME/.bashrc'"
+    fi
   fi
 fi
 
