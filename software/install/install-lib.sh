@@ -108,3 +108,29 @@ confirm_or_die() {
     *) echo "Aborted."; return 1 ;;
   esac
 }
+
+# verify_command <cmd> [<regex>] [<version-cmd>]
+# - checks command exists; if <regex> provided, runs <version-cmd> (defaults to "<cmd> --version") and checks output matches regex
+verify_command() {
+  local cmd="$1"
+  local regex="${2:-}"
+  local ver_cmd="${3:-$cmd --version}"
+
+  if ! command -v "$cmd" >/dev/null 2>&1; then
+    echo "ERROR: $cmd not found" >&2
+    return 2
+  fi
+
+  if [ -n "$regex" ]; then
+    local out
+    out=$(eval "$ver_cmd" 2>&1 || true)
+    if ! echo "$out" | grep -E -q "$regex"; then
+      echo "WARNING: $cmd version check failed. Expected regex: $regex; output: ${out%%$'\n'*}" >&2
+      return 3
+    fi
+    echo "$cmd OK: ${out%%$'\n'*}"
+  else
+    echo "$cmd present"
+  fi
+  return 0
+}

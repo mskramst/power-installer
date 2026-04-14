@@ -60,6 +60,7 @@ else
   echo "Installing VSCode"
   add_apt_keyring_repo "https://packages.microsoft.com/keys/microsoft.asc" "/etc/apt/keyrings/microsoft.gpg" "vscode.list" "deb [arch=amd64 signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/vscode stable main"
   apt_install_if_needed code
+  verify_command code '^.' 'code --version' || true
 fi
 
 # sdkman
@@ -77,6 +78,7 @@ if command -v pnpm >/dev/null 2>&1; then
 else
   echo "Installing pnpm"
   run_cmd "curl -fsSL https://get.pnpm.io/install.sh | sh -"
+  verify_command pnpm '^[0-9]+' 'pnpm --version' || true
 fi
 
 # Node via nvm (LTS)
@@ -102,6 +104,7 @@ else
   # Install LTS and set default
   run_cmd "nvm install --lts"
   run_cmd "nvm alias default 'lts/*' || true"
+  verify_command node '^v[0-9]+' 'node --version' || true
 fi
 
 # GitHub CLI (gh)
@@ -111,6 +114,7 @@ else
   echo "Installing GitHub CLI"
   add_apt_keyring_repo "https://cli.github.com/packages/githubcli-archive-keyring.gpg" "/etc/apt/keyrings/githubcli-archive-keyring.gpg" "github-cli.list" "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main"
   apt_install_if_needed gh
+  verify_command gh '^[0-9]' 'gh --version' || true
 fi
 
 # Go
@@ -137,6 +141,8 @@ else
       run_cmd "echo 'export PATH=\\"\\$PATH:/usr/local/go/bin\\"' >> '$HOME/.bashrc'"
     fi
   fi
+  # validate go
+  verify_command go 'go[0-9]+' 'go version' || true
 fi
 
 # mods
@@ -157,6 +163,7 @@ else
   echo "Installing wezterm"
   add_apt_keyring_repo "https://wezfurlong.org/wezterm/apt/wezterm.asc" "/etc/apt/keyrings/wezterm.gpg" "wezterm.list" "deb [signed-by=/etc/apt/keyrings/wezterm.gpg] https://wezfurlong.org/wezterm/apt/ $(lsb_release -cs) main"
   apt_install_if_needed wezterm || true
+  verify_command wezterm '.*' 'wezterm --version' || true
 fi
 
 # chezmoi
@@ -165,6 +172,7 @@ if command -v chezmoi >/dev/null 2>&1; then
 else
   echo "Installing chezmoi"
   run_cmd "sh -c \"\$(curl -fsLS get.chezmoi.io)\" -- -b /usr/local/bin"
+  verify_command chezmoi 'chezmoi' 'chezmoi --version' || true
 fi
 
 # atuin
@@ -173,6 +181,7 @@ if command -v atuin >/dev/null 2>&1; then
 else
   echo "Installing atuin"
   run_cmd "curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh"
+  verify_command atuin '.*' 'atuin --version' || true
 fi
 
 # Google Chrome
@@ -184,6 +193,14 @@ else
   run_cmd "wget -O '$tmpdeb' https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
   run_cmd "sudo apt-get install -y '$tmpdeb' || sudo apt-get install -f -y"
   run_cmd "rm -f '$tmpdeb'"
+  # validate chrome install (binary may be google-chrome-stable or google-chrome)
+  if command -v google-chrome-stable >/dev/null 2>&1; then
+    verify_command google-chrome-stable '.*' 'google-chrome-stable --version' || true
+  elif command -v google-chrome >/dev/null 2>&1; then
+    verify_command google-chrome '.*' 'google-chrome --version' || true
+  else
+    echo "Warning: chrome binary not found after install"
+  fi
 fi
 
 echo "favs install complete. Backups (if any) at ${BACKUP_DIR:-$HOME/.power-installer-backups}"
