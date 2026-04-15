@@ -16,5 +16,5 @@ url="https://github.com/$user/$repo/releases/download/v${ver}/$deb"
 
 dir="$(mktemp -d)"
 echo "$dir"
-cd "$dir"
+cd "$dir" || exit
 curl -LO "$url" && sudo dpkg -i ./*.deb

@@ -2,7 +2,7 @@
 set -euo pipefail
 # Retrofit installers: backup and wrap shell scripts under software/ to source install-lib.sh
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-BACKUP_DIR="${BACKUP_DIR:-$HOME/.power-installer-backups/retrofit-$(date +%Y%m%d-%H%M%S)}"
+BACKUP_DIR="${BACKUP_DIR:-"$HOME"/.power-installer-backups/retrofit-$(date +%Y%m%d-%H%M%S)}"
 mkdir -p "$BACKUP_DIR"
 echo "Backup dir: $BACKUP_DIR"
 
@@ -21,7 +21,7 @@ for f in "${files[@]}"; do
   fi
   echo "Wrapping: $f"
   # create backup path
-  rel="${f#$ROOT/}"
+  rel="${f#"$ROOT"/}"
   dest_backup="$BACKUP_DIR/$rel"
   mkdir -p "$(dirname "$dest_backup")"
   cp -a "$f" "$dest_backup"

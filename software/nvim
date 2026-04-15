@@ -6,7 +6,7 @@ source "$SCRIPT_DIR/install/install-lib.sh"
 DRY_RUN="${DRY_RUN:-0}"
 YES="${YES:-0}"
 REPO_URL="https://github.com/neovim/neovim.git"
-NEOVIM_DIR="${NEOVIM_DIR:-$HOME/src/neovim}"
+NEOVIM_DIR="${NEOVIM_DIR:-"$HOME"/src/neovim}"
 
 while [ $# -gt 0 ]; do
   case "$1" in

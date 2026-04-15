@@ -32,7 +32,7 @@ run_cmd "sudo apt-get update"
 run_cmd "sudo apt-get install -y docker-ce docker-ce-cli containerd.io"
 
 # safer permission handling: add user to docker group and inform to re-login
-run_cmd "sudo usermod -aG docker $USER"
+run_cmd "sudo usermod -aG docker "$USER""
 if [ "${DRY_RUN:-0}" -eq 0 ]; then
   echo "Added $USER to docker group. Log out and log back in for group membership to take effect. Avoid using 'chmod 666 /var/run/docker.sock' — it's unsafe." 
 fi

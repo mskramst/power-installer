@@ -156,7 +156,7 @@ else
     run_cmd "wget -O '$local_tar' https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz"
     run_cmd "sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf '$local_tar'"
     if ! grep -q '/usr/local/go/bin' <<< "$(cat \"$HOME\"/.bashrc 2>/dev/null || true)"; then
-      run_cmd "echo 'export PATH=\\"\\$PATH:/usr/local/go/bin\\"' >> '$HOME/.bashrc'"
+      run_cmd "echo 'export PATH=\\"\\$PATH:/usr/local/go/bin\\"' >> '"$HOME"/.bashrc'"
     fi
   fi
   # validate go
@@ -206,6 +206,19 @@ else
   verify_command atuin '.*' 'atuin --version' || true
 fi
 
+# Firefox (desktop-only)
+if [ "$MODE" = "desktop" ]; then
+  if command -v firefox >/dev/null 2>&1 || dpkg -s firefox >/dev/null 2>&1; then
+    echo "Firefox already installed"
+  else
+    echo "Installing Firefox"
+    apt_install_if_needed firefox
+    verify_command firefox 'Mozilla' 'firefox --version' || true
+  fi
+else
+  echo "Skipping Firefox (non-desktop / WSL)"
+fi
+
 # Google Chrome (desktop-only)
 if [ "$MODE" = "desktop" ]; then
   if dpkg -s google-chrome-stable >/dev/null 2>&1 || command -v google-chrome-stable >/dev/null 2>&1 || command -v google-chrome >/dev/null 2>&1; then
@@ -229,4 +242,4 @@ else
   echo "Skipping Google Chrome (non-desktop / WSL)"
 fi
 
-echo "favs install complete. Backups (if any) at ${BACKUP_DIR:-$HOME/.power-installer-backups}"
+echo "favs install complete. Backups (if any) at ${BACKUP_DIR:-"$HOME"/.power-installer-backups}"

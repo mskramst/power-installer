@@ -51,9 +51,9 @@ else
   local_tar="/tmp/go${GO_VERSION}.linux-amd64.tar.gz"
   run_cmd "wget -O '$local_tar' https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz"
   run_cmd "sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf '$local_tar'"
-  if ! grep -q '/usr/local/go/bin' <<< "$(cat $HOME/.bashrc 2>/dev/null || true)"; then
-    run_cmd "echo 'export PATH=\"\$PATH:/usr/local/go/bin\"' >> '$HOME/.bashrc'"
+  if ! grep -q '/usr/local/go/bin' <<< "$(cat "$HOME"/.bashrc 2>/dev/null || true)"; then
+    run_cmd "echo 'export PATH=\"\$PATH:/usr/local/go/bin\"' >> '"$HOME"/.bashrc'"
   fi
 fi
 
-echo "language environment installs complete. Backups (if any): ${BACKUP_DIR:-$HOME/.power-installer-backups}"
+echo "language environment installs complete. Backups (if any): ${BACKUP_DIR:-"$HOME"/.power-installer-backups}"

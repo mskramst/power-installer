@@ -1,10 +1,10 @@
 #!/bin/bash
 
 config () {
-'/usr/bin/git --git-dir=$HOME/.cfg --work-tree=$HOME' 
+'/usr/bin/git --git-dir="$HOME"/.cfg --work-tree="$HOME'" 
 }
 
 echo ".cfg" >> .gitignore
-git clone --bare https://github.com/mskramst/mydotfiles $HOME/.cfg
-git --git-dir=$HOME/.cfg/ --work-tree=$HOME checkout
+git clone --bare https://github.com/mskramst/mydotfiles "$HOME"/.cfg
+git --git-dir="$HOME"/.cfg/ --work-tree="$HOME" checkout
 config config --local status.showUntrackedFiles no

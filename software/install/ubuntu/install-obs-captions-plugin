@@ -18,7 +18,7 @@ if (( major < 27 )); then
 fi
 
 dir=$(mktemp -d)
-cd "$dir"
+cd "$dir" || exit
 echo "Working directory now $dir"
 curl -sSL "$url" -o release.json
 name=$(jq -r .name release.json)

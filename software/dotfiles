@@ -4,7 +4,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/install/install-lib.sh"
 
 REPO_URL="https://github.com/mskramst/dotfiles"
-DEST_DIR="${DEST_DIR:-$HOME/dotfiles}"
+DEST_DIR="${DEST_DIR:-"$HOME"/dotfiles}"
 DRY_RUN="${DRY_RUN:-0}"
 YES="${YES:-0}"
 
@@ -41,4 +41,4 @@ if [ -d "$DEST_DIR/.vim" ]; then
   rsync_dir_if_needed "$DEST_DIR/.vim" "$HOME/.vim"
 fi
 
-echo "Dotfiles install/update complete. Backups (if any) are in ${BACKUP_DIR:-$HOME/.power-installer-backups}"
+echo "Dotfiles install/update complete. Backups (if any) are in ${BACKUP_DIR:-"$HOME"/.power-installer-backups}"

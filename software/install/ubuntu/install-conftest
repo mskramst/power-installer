@@ -11,7 +11,7 @@ rel="https://github.com/$user/$repo/releases/download/$latest/${repo}_${latest//
 
 dir=$(mktemp -d)
 curl -sSL "$rel" -o "$dir/$repo.tar.gz"
-cd "$dir"
+cd "$dir" || exit
 tar xzf "$repo.tar.gz" 
 mv "$dir/$repo" "$HOME/.local/bin"
 rm -rf "$dir"

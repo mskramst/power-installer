@@ -16,7 +16,7 @@ exe="${name}-linux-${arch}"
 #exe="${name}-windows-${arch}.exe"
 url="https://github.com/$user/$name/releases/download/v${ver}/$exe"
 mkdir -p "$target" || true
-cd "$target"
+cd "$target" || exit
 curl -LO "$url"
 chmod ug+x "$exe"
 mv "$exe" "$name"

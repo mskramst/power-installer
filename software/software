@@ -36,7 +36,7 @@ install_nvim() {
     sudo apt-get install ninja-build gettext libtool libtool-bin autoconf automake
     cmake g++ pkg-config unzip curl doxygen -y
     git clone https://github.com/neovim/neovim.git
-    cd neovim
+    cd neovim || exit
     make CMAKE_BUILD_TYPE=RelWithDebInfo
     sudo make install
 }
@@ -54,7 +54,7 @@ install_mods() {
 install_vim() {
     echo "Installing vim..."
     git clone https://github.com/vim/vim.git
-    cd vim 
+    cd vim  || exit
     make distclean
     sudo apt-get install libncurses5-dev libncursesw5-dev -y
     make
@@ -70,16 +70,16 @@ install_alacritty() {
     sudo apt-get install cmake pkg-config libfreetype6-dev libfontconfig1-dev -y
     libxcb-xfixes0-dev python3 curl -y
     git clone https://github.com/alacritty/alacritty.git
-    cd alacritty
+    cd alacritty || exit
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-    source $HOME/.cargo/env
+    source "$HOME"/.cargo/env
     cargo build --release
 
     #rustup override set st=
     #rustup update stable
 
     mkdir ~/.config/alacritty
-    cd ..
+    cd .. || exit
     cp ../config/alacritty.yml ~/.config/alacritty
 
     # must run script level above target directory
@@ -129,7 +129,7 @@ show_menu() {
     echo "0. Exit"
 
     local choice
-    read -p "Enter choice [ 1 - 4] " choice
+    read -r -p "Enter choice [ 1 - 4] " choice
     case $choice in
         1) install_firefox ;;
         2) install_chrome ;;

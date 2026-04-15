@@ -3,7 +3,7 @@ set -e
 
 echo "Are you absolutely sure you want to install the *latest* etcd"
 echo "(which may not be the same as the one for your Kubernetes version)."
-read -p "(y/N) " response
+read -r -p "(y/N) " response
 test "$response" = "y"
 
 user="etcd-io"
@@ -18,12 +18,12 @@ rel="https://github.com/$user/$repo/releases/download/$latest/${repo}-${latest}-
 
 dir=$(mktemp -d)
 curl -L "$rel" -o "$dir/$repo.tar.gz"
-cd "$dir"
+cd "$dir" || exit
 tar xzf "$repo.tar.gz"
 
 echo "Do you want to move the following into /usr/local/bin?"
 ls -l $repo-$latest*/etcd*
-read -p "(y/N) " response
+read -r -p "(y/N) " response
 test "$response" = "y"
 sudo mv $repo-$latest*/etcd* /usr/local/bin
 rm -rf "$dir"
