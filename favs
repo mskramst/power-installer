@@ -131,7 +131,14 @@ if [ "$MODE" = "desktop" ]; then
     echo "VSCode already installed"
   else
     echo "Installing VSCode"
-    add_apt_keyring_repo "https://packages.microsoft.com/keys/microsoft.asc" "/etc/apt/keyrings/microsoft.gpg" "vscode.list" "deb [arch=amd64 signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/vscode stable main"
+    # ensure apt HTTPS support and required tools
+    apt_install_if_needed apt-transport-https || true
+    apt_install_if_needed ca-certificates || true
+    apt_install_if_needed gnupg || true
+    apt_install_if_needed lsb-release || true
+
+    # Add Microsoft repo and key (use 'code' repo path)
+    add_apt_keyring_repo "https://packages.microsoft.com/keys/microsoft.asc" "/etc/apt/keyrings/microsoft.gpg" "vscode.list" "deb [arch=amd64 signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/code stable main"
     apt_install_if_needed code
     verify_command code '^.' 'code --version' || true
   fi
