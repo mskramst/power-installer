@@ -125,21 +125,13 @@ add_apt_keyring_repo() {
   fi
 }
 
-# VSCode (desktop-only)
+# VSCode (desktop-only) - delegate to software/vscode installer
 if [ "$MODE" = "desktop" ]; then
   if command -v code >/dev/null 2>&1; then
     echo "VSCode already installed"
   else
-    echo "Installing VSCode"
-    # ensure apt HTTPS support and required tools
-    apt_install_if_needed apt-transport-https || true
-    apt_install_if_needed ca-certificates || true
-    apt_install_if_needed gnupg || true
-    apt_install_if_needed lsb-release || true
-
-    # Add Microsoft repo and key (use 'code' repo path)
-    add_apt_keyring_repo "https://packages.microsoft.com/keys/microsoft.asc" "/etc/apt/keyrings/microsoft.gpg" "vscode.list" "deb [arch=amd64 signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/code stable main"
-    apt_install_if_needed code
+    echo "Installing VSCode using software/vscode"
+    run_cmd "bash \"$SCRIPT_DIR/software/vscode\""
     verify_command code '^.' 'code --version' || true
   fi
 else
@@ -228,15 +220,13 @@ else
   verify_command go 'go[0-9]+' 'go version' || true
 fi
 
-# mods
+# mods - delegate to software/mods installer
 if command -v mods >/dev/null 2>&1; then
   echo "mods already present"
 else
-  echo "Installing mods"
-  run_cmd "sudo mkdir -p /etc/apt/keyrings"
-  run_cmd "curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg"
-  run_cmd "echo 'deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ *' | sudo tee /etc/apt/sources.list.d/charm.list"
-  apt_install_if_needed mods || true
+  echo "Installing mods using software/mods"
+  run_cmd "bash \"$SCRIPT_DIR/software/mods\""
+  verify_command mods '.*' 'mods --version' || true
 fi
 
 # wezterm (desktop-only)
