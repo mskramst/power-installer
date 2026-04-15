@@ -291,17 +291,13 @@ else
   echo "Skipping Firefox (non-desktop / WSL)"
 fi
 
-# Google Chrome (desktop-only)
+# Google Chrome (desktop-only) - delegate to software/chrome
 if [ "$MODE" = "desktop" ]; then
   if dpkg -s google-chrome-stable >/dev/null 2>&1 || command -v google-chrome-stable >/dev/null 2>&1 || command -v google-chrome >/dev/null 2>&1; then
     echo "Chrome already installed"
   else
-    echo "Installing Google Chrome"
-    tmpdeb="/tmp/google-chrome-stable_current_amd64.deb"
-    run_cmd "wget -O '$tmpdeb' https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
-    run_cmd "sudo apt-get install -y '$tmpdeb' || sudo apt-get install -f -y"
-    run_cmd "rm -f '$tmpdeb'"
-    # validate chrome install (binary may be google-chrome-stable or google-chrome)
+    echo "Installing Google Chrome using software/chrome"
+    run_cmd "bash \"$SCRIPT_DIR/software/chrome\""
     if command -v google-chrome-stable >/dev/null 2>&1; then
       verify_command google-chrome-stable '.*' 'google-chrome-stable --version' || true
     elif command -v google-chrome >/dev/null 2>&1; then
