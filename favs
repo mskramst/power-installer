@@ -36,6 +36,16 @@ if [ -z "$MODE" ]; then
 fi
 echo "Install mode: $MODE"
 
+# Ensure terminal vim on desktop too
+if [ "$MODE" = "desktop" ]; then
+  if command -v vim >/dev/null 2>&1; then
+    echo "vim already installed"
+  else
+    echo "Installing terminal vim"
+    apt_install_if_needed vim || true
+  fi
+fi
+
 # WSL-specific base packages (from top-level wsl script)
 if [ "$MODE" = "wsl" ]; then
   echo "WSL mode: installing base CLI packages"
