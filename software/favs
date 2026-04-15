@@ -12,6 +12,8 @@ while [ $# -gt 0 ]; do
     --dry-run) DRY_RUN=1; shift ;;
     --yes|-y) YES=1; shift ;;
     --go) GO_VERSION="$2"; shift 2 ;;
+    --wsl) MODE="wsl"; shift ;;
+    --desktop) MODE="desktop"; shift ;;
     *) echo "Unknown arg: $1"; exit 2 ;;
   esac
 done
@@ -21,6 +23,18 @@ require_cmds curl wget gpg lsb_release dpkg
 # Detect OS (uses install-lib detect_os)
 OS="$(detect_os)"
 echo "Detected OS: $OS"
+
+# Decide mode: 'desktop' installs GUI apps, 'wsl' avoids them. Explicit flags override auto-detect.
+MODE="${MODE:-}
+"
+if [ -z "$MODE" ]; then
+  if is_wsl; then
+    MODE="wsl"
+  else
+    MODE="desktop"
+  fi
+fi
+echo "Install mode: $MODE"
 
 apt_update_done=0
 apt_update() {
@@ -53,14 +67,18 @@ add_apt_keyring_repo() {
   fi
 }
 
-# VSCode
-if command -v code >/dev/null 2>&1; then
-  echo "VSCode already installed"
+# VSCode (desktop-only)
+if [ "$MODE" = "desktop" ]; then
+  if command -v code >/dev/null 2>&1; then
+    echo "VSCode already installed"
+  else
+    echo "Installing VSCode"
+    add_apt_keyring_repo "https://packages.microsoft.com/keys/microsoft.asc" "/etc/apt/keyrings/microsoft.gpg" "vscode.list" "deb [arch=amd64 signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/vscode stable main"
+    apt_install_if_needed code
+    verify_command code '^.' 'code --version' || true
+  fi
 else
-  echo "Installing VSCode"
-  add_apt_keyring_repo "https://packages.microsoft.com/keys/microsoft.asc" "/etc/apt/keyrings/microsoft.gpg" "vscode.list" "deb [arch=amd64 signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/vscode stable main"
-  apt_install_if_needed code
-  verify_command code '^.' 'code --version' || true
+  echo "Skipping VSCode (non-desktop / WSL)"
 fi
 
 # sdkman
@@ -156,14 +174,18 @@ else
   apt_install_if_needed mods || true
 fi
 
-# wezterm
-if command -v wezterm >/dev/null 2>&1; then
-  echo "wezterm already installed"
+# wezterm (desktop-only)
+if [ "$MODE" = "desktop" ]; then
+  if command -v wezterm >/dev/null 2>&1; then
+    echo "wezterm already installed"
+  else
+    echo "Installing wezterm"
+    add_apt_keyring_repo "https://wezfurlong.org/wezterm/apt/wezterm.asc" "/etc/apt/keyrings/wezterm.gpg" "wezterm.list" "deb [signed-by=/etc/apt/keyrings/wezterm.gpg] https://wezfurlong.org/wezterm/apt/ $(lsb_release -cs) main"
+    apt_install_if_needed wezterm || true
+    verify_command wezterm '.*' 'wezterm --version' || true
+  fi
 else
-  echo "Installing wezterm"
-  add_apt_keyring_repo "https://wezfurlong.org/wezterm/apt/wezterm.asc" "/etc/apt/keyrings/wezterm.gpg" "wezterm.list" "deb [signed-by=/etc/apt/keyrings/wezterm.gpg] https://wezfurlong.org/wezterm/apt/ $(lsb_release -cs) main"
-  apt_install_if_needed wezterm || true
-  verify_command wezterm '.*' 'wezterm --version' || true
+  echo "Skipping wezterm (non-desktop / WSL)"
 fi
 
 # chezmoi
@@ -184,23 +206,27 @@ else
   verify_command atuin '.*' 'atuin --version' || true
 fi
 
-# Google Chrome
-if dpkg -s google-chrome-stable >/dev/null 2>&1 || command -v google-chrome-stable >/dev/null 2>&1 || command -v google-chrome >/dev/null 2>&1; then
-  echo "Chrome already installed"
-else
-  echo "Installing Google Chrome"
-  tmpdeb="/tmp/google-chrome-stable_current_amd64.deb"
-  run_cmd "wget -O '$tmpdeb' https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
-  run_cmd "sudo apt-get install -y '$tmpdeb' || sudo apt-get install -f -y"
-  run_cmd "rm -f '$tmpdeb'"
-  # validate chrome install (binary may be google-chrome-stable or google-chrome)
-  if command -v google-chrome-stable >/dev/null 2>&1; then
-    verify_command google-chrome-stable '.*' 'google-chrome-stable --version' || true
-  elif command -v google-chrome >/dev/null 2>&1; then
-    verify_command google-chrome '.*' 'google-chrome --version' || true
+# Google Chrome (desktop-only)
+if [ "$MODE" = "desktop" ]; then
+  if dpkg -s google-chrome-stable >/dev/null 2>&1 || command -v google-chrome-stable >/dev/null 2>&1 || command -v google-chrome >/dev/null 2>&1; then
+    echo "Chrome already installed"
   else
-    echo "Warning: chrome binary not found after install"
+    echo "Installing Google Chrome"
+    tmpdeb="/tmp/google-chrome-stable_current_amd64.deb"
+    run_cmd "wget -O '$tmpdeb' https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
+    run_cmd "sudo apt-get install -y '$tmpdeb' || sudo apt-get install -f -y"
+    run_cmd "rm -f '$tmpdeb'"
+    # validate chrome install (binary may be google-chrome-stable or google-chrome)
+    if command -v google-chrome-stable >/dev/null 2>&1; then
+      verify_command google-chrome-stable '.*' 'google-chrome-stable --version' || true
+    elif command -v google-chrome >/dev/null 2>&1; then
+      verify_command google-chrome '.*' 'google-chrome --version' || true
+    else
+      echo "Warning: chrome binary not found after install"
+    fi
   fi
+else
+  echo "Skipping Google Chrome (non-desktop / WSL)"
 fi
 
 echo "favs install complete. Backups (if any) at ${BACKUP_DIR:-$HOME/.power-installer-backups}"

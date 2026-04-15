@@ -21,6 +21,17 @@ detect_os() {
   esac
 }
 
+is_wsl() {
+  # returns 0 (true) when running inside WSL
+  if [ -n "${WSL_DISTRO_NAME-}" ]; then
+    return 0
+  fi
+  if [ -f /proc/version ] && grep -qi "microsoft" /proc/version 2>/dev/null; then
+    return 0
+  fi
+  return 1
+}
+
 require_cmds() {
   local miss=()
   for cmd in "$@"; do
