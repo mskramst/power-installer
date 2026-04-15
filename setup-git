@@ -1,9 +1,121 @@
-#!/bin/bash
-# add ssh to github account, must use gh auth login
-git config --global init.defaultBranch main
-git config --global user.email "12345678+yourusername@users.noreply.github.com" 
-git config --global user.name "Special User"
-echo -e "\ncopy key below into github ssh settings"
-ssh-keygen -t ed25519 <<<~/.ssh/id_ed25519 && cat ~/.ssh/id_ed25519.pub
-gh auth login -s admin:public_key
+#!/usr/bin/env bash
+set -euo pipefail
+# setup-git: configure git user and add this machine's SSH key to GitHub
+# Usage: ./setup-git [--name NAME] [--email EMAIL] [--yes]
 
+NAME=""
+EMAIL=""
+YES=0
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --name) NAME="$2"; shift 2;;
+    --email) EMAIL="$2"; shift 2;;
+    --yes|-y) YES=1; shift;;
+    *) echo "Unknown arg: $1"; exit 2;;
+  esac
+done
+
+# ensure git exists
+if ! command -v git >/dev/null 2>&1; then
+  echo "git not found. Please install git and re-run." >&2
+  exit 1
+fi
+
+# set default branch name if not set
+if ! git config --global --get init.defaultBranch >/dev/null 2>&1; then
+  git config --global init.defaultBranch main
+fi
+
+current_name=$(git config --global --get user.name || true)
+current_email=$(git config --global --get user.email || true)
+
+if [ -n "$current_name" ] && [ -n "$current_email" ]; then
+  echo "Found existing git config:"
+  git config --global --list
+else
+  if [ -n "$NAME" ]; then
+    git config --global user.name "$NAME"
+  fi
+  if [ -n "$EMAIL" ]; then
+    git config --global user.email "$EMAIL"
+  fi
+
+  if [ -z "$(git config --global --get user.name || true)" ]; then
+    if [ "$YES" -eq 0 ]; then
+      read -r -p "Enter git user.name: " NAME
+      git config --global user.name "$NAME"
+    else
+      echo "No git user.name provided; skipping (use --name to set)"
+    fi
+  fi
+
+  if [ -z "$(git config --global --get user.email || true)" ]; then
+    if [ "$YES" -eq 0 ]; then
+      read -r -p "Enter git user.email: " EMAIL
+      git config --global user.email "$EMAIL"
+    else
+      echo "No git user.email provided; skipping (use --email to set)"
+    fi
+  fi
+fi
+
+echo "git config summary:"
+git config --global --list
+
+# Ensure SSH key exists
+SSH_DIR="$HOME/.ssh"
+KEY_FILE="$SSH_DIR/id_ed25519"
+PUB_FILE="$KEY_FILE.pub"
+
+mkdir -p "$SSH_DIR" && chmod 700 "$SSH_DIR"
+if [ -f "$PUB_FILE" ]; then
+  echo "Using existing SSH public key: $PUB_FILE"
+else
+  echo "Generating new ed25519 SSH key (no passphrase)."
+  ssh-keygen -t ed25519 -C "$(git config --global --get user.email || echo '')" -f "$KEY_FILE" -N "" || true
+fi
+
+# Add to GitHub
+if command -v gh >/dev/null 2>&1; then
+  if gh auth status >/dev/null 2>&1; then
+    PUB_CONTENT=$(cat "$PUB_FILE")
+    # Check if public key already uploaded (simple substring check)
+    if gh ssh-key list --limit 200 | grep -F "$PUB_CONTENT" >/dev/null 2>&1; then
+      echo "This SSH key already exists in your GitHub account."
+    else
+      if [ "$YES" -eq 1 ]; then
+        echo "Adding SSH key to GitHub (non-interactive)"
+        gh ssh-key add "$PUB_FILE" -t "$(hostname)-$(date +%Y%m%d)"
+      else
+        read -r -p "Add SSH key to your GitHub account now? [y/N]: " resp
+        case "${resp,,}" in
+          y|yes)
+            gh ssh-key add "$PUB_FILE" -t "$(hostname)-$(date +%Y%m%d)" ;;
+          *) echo "Skipping adding key to GitHub." ;;
+        esac
+      fi
+    fi
+  else
+    echo "gh CLI detected but not authenticated. Run: gh auth login" >&2
+  fi
+else
+  echo "gh CLI not found. To upload your key manually, copy the following and add at https://github.com/settings/ssh/new"
+  echo "---- BEGIN SSH KEY ----"
+  cat "$PUB_FILE"
+  echo "----  END SSH KEY  ----"
+fi
+
+# Optional: test SSH connection to GitHub
+if [ "$YES" -eq 0 ]; then
+  read -r -p "Test SSH connection to GitHub now? (ssh -T git@github.com) [y/N]: " testr
+  case "${testr,,}" in
+    y|yes)
+      echo "Testing SSH connection (may prompt to accept host key)"
+      ssh -T git@github.com || true
+      ;;
+    *) echo "Skipping SSH test" ;;
+  esac
+fi
+
+echo "setup-git finished"
