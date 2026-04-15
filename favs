@@ -93,13 +93,35 @@ apt_install_if_needed() {
 add_apt_keyring_repo() {
   local key_url="$1" keyfile="$2" sources_list="$3" repo_line="$4"
   if [ ! -f "$keyfile" ]; then
-    run_cmd "sudo mkdir -p /etc/apt/keyrings"
-    run_cmd "curl -fsSL '$key_url' | sudo gpg --dearmor -o '$keyfile'"
-    run_cmd "sudo chmod a+r '$keyfile'"
+    # Ensure /etc/apt/keyrings exists; use sudo if needed
+    if [ -w "/etc/apt" ] || [ -w "/etc/apt/keyrings" ] 2>/dev/null; then
+      run_cmd "mkdir -p /etc/apt/keyrings"
+      run_cmd "curl -fsSL '$key_url' | gpg --dearmor -o '$keyfile'"
+      run_cmd "chmod a+r '$keyfile'"
+    else
+      if command -v sudo >/dev/null 2>&1; then
+        run_cmd "sudo mkdir -p /etc/apt/keyrings"
+        run_cmd "curl -fsSL '$key_url' | sudo gpg --dearmor -o '$keyfile'"
+        run_cmd "sudo chmod a+r '$keyfile'"
+      else
+        echo "ERROR: Cannot write to /etc/apt/keyrings and sudo is not available. Please run this script as root or install sudo." >&2
+        return 1
+      fi
+    fi
   fi
   if [ ! -f "/etc/apt/sources.list.d/$sources_list" ]; then
-    run_cmd "echo '$repo_line' | sudo tee /etc/apt/sources.list.d/$sources_list > /dev/null"
-    apt_update
+    if [ -w "/etc/apt/sources.list.d" ] 2>/dev/null; then
+      run_cmd "echo '$repo_line' | tee /etc/apt/sources.list.d/$sources_list > /dev/null"
+      apt_update
+    else
+      if command -v sudo >/dev/null 2>&1; then
+        run_cmd "echo '$repo_line' | sudo tee /etc/apt/sources.list.d/$sources_list > /dev/null"
+        apt_update
+      else
+        echo "ERROR: Cannot write to /etc/apt/sources.list.d and sudo is not available. Please run this script as root or install sudo." >&2
+        return 1
+      fi
+    fi
   fi
 }
 
