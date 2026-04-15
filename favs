@@ -229,7 +229,24 @@ if command -v chezmoi >/dev/null 2>&1; then
   echo "chezmoi already installed"
 else
   echo "Installing chezmoi"
-  run_cmd "sh -c \"\$(curl -fsLS get.chezmoi.io)\" -- -b /usr/local/bin"
+  # Install chezmoi, prefer /usr/local/bin but fall back to ~/.local/bin if not writable
+  DEST_BIN="/usr/local/bin"
+  if [ ! -w "$DEST_BIN" ]; then
+    if command -v sudo >/dev/null 2>&1; then
+      echo "Installing chezmoi to $DEST_BIN using sudo"
+      run_cmd "curl -fsLS get.chezmoi.io | sudo sh -s -- -b '$DEST_BIN'"
+    else
+      DEST_BIN="$HOME/.local/bin"
+      mkdir -p "$DEST_BIN"
+      run_cmd "curl -fsLS get.chezmoi.io | sh -s -- -b '$DEST_BIN'"
+      # ensure DEST_BIN is in PATH via ~/.profile
+      if ! grep -q "${DEST_BIN}" "$HOME/.profile" 2>/dev/null; then
+        run_cmd "echo 'export PATH=\"${DEST_BIN}:\$PATH\"' >> \"$HOME\"/.profile"
+      fi
+    fi
+  else
+    run_cmd "curl -fsLS get.chezmoi.io | sh -s -- -b '$DEST_BIN'"
+  fi
   verify_command chezmoi 'chezmoi' 'chezmoi --version' || true
 fi
 
