@@ -25,8 +25,8 @@ OS="$(detect_os)"
 echo "Detected OS: $OS"
 
 # Decide mode: 'desktop' installs GUI apps, 'wsl' avoids them. Explicit flags override auto-detect.
-MODE="${MODE:-}
-"
+# Leave MODE unset so auto-detection works; flags (--wsl/--desktop) override
+MODE="${MODE:-}"
 if [ -z "$MODE" ]; then
   if is_wsl; then
     MODE="wsl"
