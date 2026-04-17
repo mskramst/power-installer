@@ -1,0 +1,13 @@
+# 1. Download the pre-compiled binary directly from GitHub
+gh release download --repo twpayne/chezmoi --pattern "chezmoi_*_linux_amd64.tar.gz"
+
+# 2. Extract only the binary
+tar -xzf chezmoi_*_linux_amd64.tar.gz chezmoi
+
+# 3. Move it to your local bin and make it executable
+mkdir -p ~/.local/bin
+mv chezmoi ~/.local/bin/
+chmod +x ~/.local/bin/chezmoi
+
+# 4. Verify it works
+~/.local/bin/chezmoi --version

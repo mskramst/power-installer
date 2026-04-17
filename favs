@@ -192,6 +192,15 @@ else
   verify_command gh '^[0-9]' 'gh --version' || true
 fi
 
+# podman
+if command -v podman >/dev/null 2>&1; then
+  echo "podman already installed"
+else
+  echo "Installing podman using install/ubuntu/install-podman"
+  run_cmd "bash \"$SCRIPT_DIR/install/ubuntu/install-podman\""
+  verify_command podman '.*' 'podman --version' || true
+fi
+
 # Go
 if command -v go >/dev/null 2>&1; then
   echo "go is present: $(go version)"
@@ -227,6 +236,16 @@ else
   echo "Installing mods using software/mods"
   run_cmd "bash \"$SCRIPT_DIR/software/mods\""
   verify_command mods '.*' 'mods --version' || true
+fi
+
+# glow - Charm's markdown renderer
+if command -v glow >/dev/null 2>&1; then
+  echo "glow already present"
+else
+  echo "Installing glow"
+  add_apt_keyring_repo "https://repo.charm.sh/apt/gpg.key" "/etc/apt/keyrings/charm.gpg" "charm.list" "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *"
+  apt_install_if_needed glow
+  verify_command glow '.*' 'glow --version' || true
 fi
 
 # wezterm (desktop-only)
@@ -276,6 +295,43 @@ else
   echo "Installing atuin"
   run_cmd "curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh"
   verify_command atuin '.*' 'atuin --version' || true
+fi
+
+# zsh
+if command -v zsh >/dev/null 2>&1; then
+  echo "zsh already installed"
+else
+  echo "Installing zsh"
+  apt_install_if_needed zsh
+  verify_command zsh '.*' 'zsh --version' || true
+fi
+
+# Change default shell to zsh if not already zsh
+if [ "$SHELL" != "$(which zsh 2>/dev/null)" ]; then
+  echo "Changing default shell to zsh"
+  run_cmd "sudo chsh -s \$(which zsh) \$USER"
+fi
+
+# w3m
+if command -v w3m >/dev/null 2>&1; then
+  echo "w3m already installed"
+else
+  echo "Installing w3m"
+  apt_install_if_needed w3m
+  verify_command w3m '.*' 'w3m -version' || true
+fi
+
+# bat (batcat)
+if command -v bat >/dev/null 2>&1 || command -v batcat >/dev/null 2>&1; then
+  echo "bat already installed"
+else
+  echo "Installing bat"
+  apt_install_if_needed bat
+  # On Ubuntu/Debian, binary is 'batcat'. Try to symlink it to 'bat' in ~/.local/bin
+  if ! command -v bat >/dev/null 2>&1 && command -v batcat >/dev/null 2>&1; then
+    mkdir -p "$HOME/.local/bin"
+    run_cmd "ln -sf /usr/bin/batcat \"$HOME/.local/bin/bat\""
+  fi
 fi
 
 # Firefox (desktop-only)
