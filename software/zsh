@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# Exit immediately if a command exits with a non-zero status
+set -e
+
+echo "=== Switching Default Shell to Zsh ==="
+
+# 1. Change the default shell to zsh for the current user
+if [ "$SHELL" != "*/zsh" ]; then
+    echo "Changing default shell to $(which zsh)..."
+    # chsh will prompt for your user password
+    chsh -s "$(which zsh)"
+else
+    echo "Zsh is already your default shell."
+fi
+
+# 2. Define the line to add and the target file
+ZSHRC="$HOME/.zshrc"
+# Note: Fixed the slight typo in your snippet (~/.zsrch_ext -> ~/.zshrc_ext)
+LINE_TO_ADD="if [ -f ~/.zshrc_ext ]; then . ~/.zshrc_ext; fi"
+
+echo "=== Configuring ~/.zshrc ==="
+
+# 3. Create .zshrc if it doesn't exist, or prepend the line if it does
+if [ ! -f "$ZSHRC" ]; then
+    echo "Creating new $ZSHRC file..."
+    echo "$LINE_TO_ADD" > "$ZSHRC"
+else
+    # If the file exists, we safely prepend to the top using a temporary file
+    echo ".zshrc already exists. Prepending line to the top..."
+    TEMP_ZSHRC=$(mktemp)
+    echo "$LINE_TO_ADD" > "$TEMP_ZSHRC"
+    cat "$ZSHRC" >> "$TEMP_ZSHRC"
+    mv "$TEMP_ZSHRC" "$ZSHRC"
+fi
+
+echo "=== Setup Complete! ==="
+echo "Please close this terminal window and open a new one for the changes to take effect."
