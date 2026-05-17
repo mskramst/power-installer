@@ -1,5 +1,6 @@
 #!/bin/bash	
 # sets up dotfiles
 sh -c "$(curl -fsLS get.chezmoi.io)"
+sudo mv ./bin/chezmoi /usr/local/bin/
 #chezmoi init https://www.github.com/mskramst/mydot.git
 # commands to remember: chezmoi apply, chezmoi update, chezmoi cd
