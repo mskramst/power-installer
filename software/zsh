@@ -3,6 +3,8 @@
 # Exit immediately if a command exits with a non-zero status
 set -e
 
+sudo apt-get update && sudo apt-get install zsh
+
 echo "=== Switching Default Shell to Zsh ==="
 
 # 1. Change the default shell to zsh for the current user
