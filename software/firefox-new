@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# Exit immediately if a command exits with a non-zero status
+set -e
+
+echo "=== Starting Native Firefox Installation ==="
+
+# 1. Remove the Firefox Snap completely
+echo "Removing Firefox Snap package..."
+sudo snap remove firefox
+
+# 2. Create directory for keyrings if it doesn't exist
+echo "Creating keyring directory..."
+sudo install -d /etc/apt/keyrings
+
+# 3. Import the official Mozilla APT repository signing key
+echo "Importing Mozilla signing key..."
+wget -q https://packages.mozilla.org/apt/keyrings/packages.mozilla.org.asc -O- | sudo tee /etc/apt/keyrings/packages.mozilla.org.asc > /dev/null
+
+# 4. Add the Mozilla APT repository to sources
+echo "Adding Mozilla APT repository..."
+echo "deb [signed-by=/etc/apt/keyrings/packages.mozilla.org.asc] https://packages.mozilla.org/apt mozilla main" | sudo tee /etc/apt/sources.list.d/mozilla.list > /dev/null
+
+# 5. Configure APT pinning to prioritize the native package over Snap
+echo "Configuring APT pinning preferences..."
+sudo tee /etc/apt/preferences.d/mozilla << 'EOF'
+Package: firefox*
+Pin: origin packages.mozilla.org
+Pin-Priority: 1000
+EOF
+
+# 6. Update package lists and install native Firefox
+echo "Updating package lists..."
+sudo apt update
+
+echo "Installing native Firefox (.deb)..."
+sudo apt install -y firefox
+
+echo "=== Firefox installed successfully without Snap! ==="
