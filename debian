@@ -1,8 +1,9 @@
 #!/bin/bash
-sudo apt-get update && sudo apt-get upgrade -y
-sudo apt-get install sudo man curl wget zip git tmux w3m vim -y
-sudo apt-get install wezterm fonts-inconsolata -y
-sudo apt-get install firefox-esr feh gh bat shellcheck snapd -y
-alias pi='cd "$HOME"/repos/github.com/$USER/power-installer'
-sudo snap install chezmoi --classic
-chezmoi init https://www.github.com/mskramst/mydot.git
+apt-get update && apt-get upgrade -y
+apt-get install man curl wget zip git tmux vim -y
+apt-get install wezterm fonts-inconsolata -y
+apt-get install gh jq shellcheck -y
+apt-get remove nano
+apt purge -y libreoffice*
+apt autoremove -y
+alias pi='cd "$home"/repos/github.com/$user/power-installer'
