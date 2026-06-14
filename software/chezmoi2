@@ -1,0 +1,10 @@
+# 1. Add chezmoi's official repository signing key
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://get.chezmoi.io/key | sudo gpg --dearmor -o /etc/apt/keyrings/chezmoi.gpg
+
+# 2. Add the repository to your apt sources list
+echo "deb [signed-by=/etc/apt/keyrings/chezmoi.gpg] https://get.chezmoi.io/rpm-and-deb/deb stable main" | sudo tee /etc/apt/sources.list.d/chezmoi.list
+
+# 3. Update apt and install it system-wide
+sudo apt update
+sudo apt install chezmoi
