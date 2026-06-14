@@ -1,9 +1,8 @@
 #!/bin/bash
 apt-get update && apt-get upgrade -y
-apt-get install man curl wget zip git tmux vim -y
+apt-get install man curl wget zip git tmux vim neovim -y
 apt-get install wezterm fonts-inconsolata -y
-apt-get install gh jq shellcheck -y
+apt-get install gh jq shellcheck fzf -y
 apt-get remove nano
 apt purge -y libreoffice*
 apt autoremove -y
-alias pi='cd "$home"/repos/github.com/$user/power-installer'
