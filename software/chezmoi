@@ -1,1 +1,4 @@
-sh -c "$(curl -fsLS get.chezmoi.io)"
+mkdir -p "$HOME/.local/bin"
+
+# 2. Run the installer and force it to save inside that directory
+sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin"
