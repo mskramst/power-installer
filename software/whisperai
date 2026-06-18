@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# Exit immediately if any command fails
+set -e
+
+# Configuration Variables
+INSTALL_DIR="$HOME/repos/github.com/mskramst"
+REPO_URL="https://github.com/ggerganov/whisper.cpp.git"
+MODEL_NAME="base.en"
+
+echo "🚀 Starting whisper.cpp setup..."
+
+# 1. Install System Dependencies
+echo "📦 Installing required build tools and SDL2 for audio capture..."
+sudo apt update
+sudo apt install -y build-essential cmake git libsdl2-dev
+
+# 2. Create Directory Structure
+echo "📁 Creating installation directory..."
+mkdir -p "$INSTALL_DIR"
+cd "$INSTALL_DIR"
+
+# 3. Clone Repository
+if [ -d "whisper.cpp" ]; then
+    echo "🔄 whisper.cpp directory already exists. Pulling latest updates..."
+    cd whisper.cpp
+    git pull
+else
+    echo "📥 Cloning whisper.cpp repository..."
+    git clone "$REPO_URL"
+    cd whisper.cpp
+fi
+
+# 4. Download Base Model
+echo "📥 Downloading the '$MODEL_NAME' model file..."
+./models/download-ggml-model.sh "$MODEL_NAME"
+
+# 5. Configure and Build Optimization
+echo "🛠️ Configuring build with native CPU optimizations and SDL2 support..."
+rm -rf build/
+cmake -B build -DWHISPER_SDL2=ON -DCMAKE_C_FLAGS="-march=native" -DCMAKE_CXX_FLAGS="-march=native"
+
+echo "🏗️ Compiling whisper-stream (this may take a minute)..."
+cmake --build build --config Release --target whisper-stream
+
+# 6. Verification
+echo "--------------------------------------------------------"
+if [ -f "./build/bin/whisper-stream" ]; then
+    echo "✅ Installation Successful!"
+    echo "🚀 Binary Location: $INSTALL_DIR/whisper.cpp/build/bin/whisper-stream"
+    echo "📦 Model Location:  $INSTALL_DIR/whisper.cpp/models/ggml-$MODEL_NAME.bin"
+else
+    echo "❌ Build failed. Please check the logs above."
+    exit 1
+fi
